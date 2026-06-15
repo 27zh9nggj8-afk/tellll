@@ -1,0 +1,1744 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#EDE5D8" />
+<title>합격노트 · 텔레마케팅관리사 실기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap');
+
+:root{
+  --serif:'Gowun Batang', serif;
+  --sans:'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+  --radius:22px; --radius-sm:15px;
+  --maxw:560px;
+}
+
+/* ☀ 라이트 — 부드러운 그레이지 + 더스티 로즈 (사진 톤) */
+.theme-light{
+  --bg:#E8DFD6; --bg-glow:#F1EAE1;
+  --surface:#FAF6F0; --surface2:#EFE7DB;
+  --ink:#3A332B; --muted:#8F8473; --line:#DACFBE;
+  --accent:#AC6F5F; --accent-deep:#8E5546; --accent-soft:#EEDFD8;
+  --wood:#C3A57C; --wood-soft:#E9DECB;
+  --shadow:0 8px 30px rgba(90,68,44,.08);
+  --shadow-pop:0 18px 50px rgba(70,50,30,.16);
+}
+/* 🌙 다크 — 사진 속 방의 밤 분위기 */
+.theme-dark{
+  --bg:#201C16; --bg-glow:#2A2419;
+  --surface:#2A251E; --surface2:#342E26;
+  --ink:#EDE3D2; --muted:#A89C88; --line:#3D3629;
+  --accent:#BC8071; --accent-deep:#E2A492; --accent-soft:#3B2D27;
+  --wood:#C3A57C; --wood-soft:#3A3327;
+  --shadow:0 8px 30px rgba(0,0,0,.45);
+  --shadow-pop:0 18px 50px rgba(0,0,0,.55);
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body,#root{height:100%;margin:0;}
+body{
+  font-family:var(--sans); color:var(--ink); background:var(--bg);
+  font-size:15px; line-height:1.6; letter-spacing:-.01em;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;letter-spacing:-.01em;outline:none;}
+input,textarea{font-family:inherit;outline:none;}
+
+.app-root{min-height:100vh;width:100%;position:relative;overflow-x:hidden;
+  background:var(--bg); color:var(--ink); transition:background .4s,color .4s;}
+/* 분위기 배경 — 사진의 부드러운 햇살 + 미세 노이즈 */
+.app-root::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(120% 80% at 78% -8%, var(--bg-glow) 0%, transparent 55%),
+    radial-gradient(90% 60% at -10% 110%, var(--wood-soft) 0%, transparent 50%);
+  opacity:.5;transition:opacity .4s;}
+.app-root::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.app-root>*{position:relative;z-index:1;}
+
+/* ───────── 온보딩 ───────── */
+.onboard{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 26px;text-align:center;}
+.ob-badge{font-size:11.5px;letter-spacing:.22em;color:var(--accent-deep);background:var(--accent-soft);
+  padding:7px 16px;border-radius:30px;font-weight:700;}
+.ob-title{font-family:var(--serif);font-size:54px;font-weight:700;margin:20px 0 4px;letter-spacing:.01em;}
+.ob-sub{color:var(--muted);line-height:1.8;font-size:15px;margin:0;}
+.ob-dday{margin:28px 0 32px;font-size:15px;}
+.ob-dday b{font-family:var(--serif);color:var(--accent);font-size:26px;margin-left:4px;}
+.ob-form{width:100%;max-width:330px;}
+.ob-label{display:block;text-align:left;font-size:13px;color:var(--muted);margin-bottom:8px;}
+.ob-input{width:100%;padding:15px 16px;border-radius:14px;border:1.5px solid var(--line);
+  background:var(--surface);color:var(--ink);font-size:16px;transition:border .2s;}
+.ob-input:focus{border-color:var(--accent);}
+.ob-btn{width:100%;margin-top:14px;padding:16px;border-radius:14px;background:var(--accent);color:#fff;
+  font-size:16px;font-weight:700;transition:transform .1s,filter .2s;}
+.ob-btn:active{transform:scale(.98);}
+.ob-foot{margin-top:24px;font-size:12px;color:var(--muted);line-height:1.6;}
+
+/* ───────── 상단바 ───────── */
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;background:color-mix(in srgb,var(--bg) 80%,transparent);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--line);}
+.tb-left{display:flex;align-items:center;gap:9px;}
+.tb-logo{font-family:var(--serif);font-weight:700;font-size:21px;letter-spacing:.01em;}
+.tb-dday{font-size:13px;font-weight:700;color:#fff;background:var(--accent);padding:4px 11px;border-radius:20px;}
+.tb-right{display:flex;gap:4px;}
+.icon-btn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:11px;
+  color:var(--ink);transition:background .2s;}
+.icon-btn:active{background:var(--surface2);}
+
+/* ───────── 화면 ───────── */
+.screen{padding:20px 16px 110px;max-width:var(--maxw);margin:0 auto;}
+.fade{animation:fade .4s ease both;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+@keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+.view-title{font-family:var(--serif);font-size:26px;font-weight:700;margin:4px 0 4px;}
+.view-sub{color:var(--muted);font-size:14px;margin:0 0 20px;}
+.center-col{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:58vh;}
+
+/* ───────── 홈 ───────── */
+.greet{color:var(--muted);font-size:15px;margin:2px 0 0;}
+.greet-name{font-family:var(--serif);font-size:28px;font-weight:700;margin:2px 0 20px;}
+.dday-card{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:24px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden;animation:rise .5s both;}
+.dday-top{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);position:relative;}
+.dday-date{font-weight:700;color:var(--accent-deep);background:var(--accent-soft);padding:4px 11px;border-radius:20px;font-size:12.5px;}
+.dday-big{font-family:var(--serif);font-size:56px;font-weight:700;line-height:1.05;margin:8px 0 16px;
+  color:var(--accent-deep);position:relative;}
+.dday-big small{font-size:24px;color:var(--muted);margin-left:6px;}
+.dday-bar{height:8px;border-radius:10px;background:var(--surface2);overflow:hidden;position:relative;}
+.dday-fill{height:100%;background:var(--accent);border-radius:10px;transition:width .8s;}
+.dday-msg{font-size:13.5px;color:var(--muted);margin:13px 0 0;position:relative;}
+
+.stat-row{display:flex;align-items:center;gap:18px;background:var(--surface);border:1px solid var(--line);
+  border-radius:22px;padding:18px;margin-top:14px;box-shadow:var(--shadow);animation:rise .5s .05s both;}
+.ring-wrap{position:relative;flex-shrink:0;}
+.ring-bg{fill:none;stroke:var(--surface2);stroke-width:8;}
+.ring-fg{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .8s;}
+.ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-label b{font-family:var(--serif);font-size:21px;}
+.ring-label span{font-size:10px;color:var(--muted);}
+.stat-list{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;flex:1;}
+.stat{display:flex;flex-direction:column;}
+.stat b{font-family:var(--serif);font-size:21px;line-height:1;}
+.stat span{font-size:11px;color:var(--muted);margin-top:4px;}
+.stat.ok b{color:var(--accent);}
+.stat.no b{color:var(--accent-deep);}
+
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+.q-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 16px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;box-shadow:var(--shadow);
+  transition:transform .12s;animation:rise .5s both;}
+.q-card:active{transform:scale(.97);}
+.q-emoji{font-size:23px;margin-bottom:7px;}
+.q-card b{font-size:15.5px;}
+.q-desc{font-size:12px;color:var(--muted);}
+.q-card.note{grid-column:span 2;flex-direction:row;align-items:center;gap:14px;}
+.q-card.note .q-emoji{margin:0;}
+.q-card .bar{height:3px;width:34px;border-radius:3px;background:var(--accent);margin-bottom:9px;}
+.q-card.b .bar{background:var(--wood);}
+.q-card.c .bar{background:#C7943F;}
+.q-card.d .bar{background:#8A6A53;}
+
+.tip{margin-top:16px;background:var(--accent-soft);border-radius:16px;padding:16px 18px;
+  font-size:13.5px;line-height:1.75;color:var(--accent-deep);animation:rise .5s .1s both;}
+.tip b{font-weight:700;}
+
+/* ───────── 요약 ───────── */
+.sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.sec-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 15px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;box-shadow:var(--shadow);
+  transition:transform .12s,border-color .2s;animation:rise .45s both;}
+.sec-card:active{transform:scale(.97);}
+.sec-ico{font-size:21px;color:var(--accent);}
+.sec-ico.big{font-size:26px;}
+.sec-card b{font-size:14.5px;line-height:1.4;}
+.sec-count{font-size:11.5px;color:var(--muted);}
+
+.back{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:14px;
+  margin-bottom:16px;padding:6px 4px;}
+.sec-head{display:flex;align-items:center;gap:11px;margin-bottom:16px;}
+.sec-head h2{font-family:var(--serif);font-size:23px;font-weight:700;margin:0;}
+
+.acc-list{display:flex;flex-direction:column;gap:11px;}
+.acc{background:var(--surface);border:1px solid var(--line);border-radius:15px;overflow:hidden;transition:border-color .2s;}
+.acc.open{border-color:var(--accent);}
+.acc-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:17px 18px;font-size:15px;font-weight:600;text-align:left;}
+.acc-head .star{font-size:11px;color:var(--accent-deep);}
+.chev{color:var(--muted);transition:transform .25s;font-size:17px;flex-shrink:0;}
+.acc.open .chev{transform:rotate(180deg);}
+.acc-body{margin:0;padding:4px 19px 19px;list-style:none;display:flex;flex-direction:column;gap:14px;animation:fade .25s;}
+.acc-body li{position:relative;padding-left:18px;font-size:14px;line-height:1.88;color:var(--ink);}
+.acc-body li::before{content:"";position:absolute;left:0;top:11px;width:5px;height:5px;border-radius:50%;background:var(--accent);}
+.acc-body li b{color:var(--accent-deep);font-weight:700;}
+
+.mini-table{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:15px;
+  margin-bottom:14px;box-shadow:var(--shadow);}
+.mt-title{font-size:14px;font-weight:700;margin-bottom:11px;color:var(--accent-deep);}
+.mt-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.mini-table table{border-collapse:collapse;width:100%;min-width:380px;font-size:12.5px;}
+.mini-table th,.mini-table td{padding:8px 9px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap;}
+.mini-table thead th{background:var(--accent-soft);color:var(--accent-deep);font-weight:700;}
+.mini-table .th-first,.mini-table .row-h{background:var(--surface2);font-weight:600;text-align:left;position:sticky;left:0;}
+.mini-table .row-h{color:var(--muted);}
+
+/* ───────── 문제 ───────── */
+.catbtn{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:16px 18px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;margin-bottom:11px;
+  box-shadow:var(--shadow);transition:transform .12s;}
+.catbtn:active{transform:scale(.98);}
+.catbtn b{font-size:15.5px;}
+.catbtn span{font-size:12px;color:var(--muted);}
+.catbtn.feat{background:var(--accent-soft);border:1px solid var(--line);border-left:3px solid var(--accent);}
+.catbtn.feat b{color:var(--accent-deep);}
+.catbtn.feat span{color:var(--muted);}
+.catbtn.feat .tagnew{display:inline-block;font-size:10px;font-weight:800;background:var(--accent);color:#fff;
+  padding:2px 8px;border-radius:20px;margin-bottom:6px;letter-spacing:.05em;}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.cat-grid .catbtn{margin-bottom:0;}
+
+.quiz-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
+.quiz-cat{font-size:12px;font-weight:700;color:var(--accent-deep);background:var(--accent-soft);
+  padding:4px 11px;border-radius:20px;}
+.quiz-prog{font-size:13px;color:var(--muted);}
+.quiz-progbar{height:5px;background:var(--surface2);border-radius:8px;overflow:hidden;margin-bottom:18px;}
+.quiz-progbar div{height:100%;background:var(--accent);border-radius:8px;transition:width .3s;}
+
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px 20px;box-shadow:var(--shadow);}
+.q-yr{display:inline-block;font-family:var(--serif);font-size:13px;color:var(--wood);font-weight:700;margin-bottom:10px;}
+.q-yr.y26{color:var(--accent-deep);}
+.q-text{font-size:18px;line-height:1.65;font-weight:500;margin:0 0 16px;word-break:keep-all;}
+.q-prev{display:inline-block;font-size:11.5px;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.q-prev.ok{color:var(--accent);background:var(--accent-soft);}
+.q-prev.no{color:var(--accent-deep);background:var(--accent-soft);}
+.reveal-btn{width:100%;margin-top:4px;padding:15px;border-radius:13px;background:var(--accent-soft);
+  color:var(--accent-deep);font-weight:700;font-size:15px;transition:transform .1s;}
+.reveal-btn:active{transform:scale(.98);}
+.answer{margin-top:18px;padding-top:18px;border-top:1px dashed var(--line);animation:fade .25s;}
+.ans-label{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px;}
+.ans-text{font-size:15.5px;line-height:1.8;margin:0 0 18px;white-space:pre-line;}
+.grade-row{display:flex;gap:10px;}
+.grade{flex:1;padding:15px;border-radius:13px;font-weight:700;font-size:15px;transition:transform .1s;}
+.grade:active{transform:scale(.97);}
+.grade.o{background:var(--accent);color:#fff;}
+.grade.x{background:var(--surface2);color:var(--accent-deep);border:1.5px solid var(--accent-soft);}
+.skip-btn{display:block;margin:16px auto 0;color:var(--muted);font-size:13.5px;padding:8px;}
+
+.done-card{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:34px 26px;
+  text-align:center;box-shadow:var(--shadow);width:100%;max-width:340px;}
+.done-emoji{font-size:42px;}
+.done-card h2{font-family:var(--serif);font-size:22px;margin:10px 0 4px;}
+.done-rate{font-family:var(--serif);font-size:48px;font-weight:700;color:var(--accent);}
+.done-line{font-size:14px;margin:4px 0;}
+.done-msg{font-size:13.5px;color:var(--muted);margin:6px 0 20px;line-height:1.6;}
+.ghost-btn{width:100%;margin-top:8px;padding:13px;border-radius:13px;color:var(--muted);font-size:14px;}
+
+/* ───────── 오답 ───────── */
+.empty{text-align:center;}
+.empty-emoji{font-size:46px;}
+.empty h2{font-family:var(--serif);font-size:22px;margin:12px 0 6px;}
+.empty p{color:var(--muted);font-size:14px;line-height:1.6;max-width:260px;margin:0 auto;}
+.wrong-list{display:flex;flex-direction:column;gap:10px;}
+.wrong-item{background:var(--surface);border:1px solid var(--line);border-radius:15px;overflow:hidden;
+  border-left:3px solid var(--accent);}
+.wrong-q{width:100%;text-align:left;padding:15px 16px;display:flex;flex-direction:column;gap:6px;}
+.wrong-cat{font-size:11px;color:var(--accent-deep);font-weight:700;}
+.wrong-text{font-size:14.5px;line-height:1.55;font-weight:500;word-break:keep-all;}
+.wrong-a{padding:0 16px 16px;animation:fade .25s;}
+.wrong-a p{font-size:14.5px;line-height:1.8;margin:0 0 12px;padding-top:12px;border-top:1px dashed var(--line);white-space:pre-line;}
+.resolve{width:100%;padding:12px;border-radius:11px;background:var(--accent-soft);color:var(--accent-deep);
+  font-weight:700;font-size:14px;}
+
+/* ───────── 암기 ───────── */
+.memo-tabs{display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:2px;}
+.memo-tab{flex-shrink:0;padding:9px 16px;border-radius:22px;background:var(--surface2);color:var(--muted);
+  font-size:13.5px;font-weight:600;transition:all .2s;}
+.memo-tab.on{background:var(--accent);color:#fff;}
+
+.deck{display:flex;flex-direction:column;align-items:center;}
+.deck-hint{font-size:13px;color:var(--muted);margin:0 0 14px;}
+.flash{width:100%;max-width:360px;height:236px;perspective:1200px;cursor:pointer;}
+.flash-inner{position:relative;width:100%;height:100%;transition:transform .55s;transform-style:preserve-3d;}
+.flash.flip .flash-inner{transform:rotateY(180deg);}
+.flash-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:28px;text-align:center;box-shadow:var(--shadow);border:1px solid var(--line);}
+.flash-face.front{background:var(--surface);}
+.flash-front-text{font-family:var(--serif);font-size:34px;font-weight:700;color:var(--accent-deep);letter-spacing:.03em;}
+.flash-tap{position:absolute;bottom:18px;font-size:11.5px;color:var(--muted);}
+.flash-face.back{background:var(--accent);color:#fff;transform:rotateY(180deg);}
+.flash-back-text{font-size:16.5px;line-height:1.75;font-weight:500;}
+.deck-nav{display:flex;gap:12px;margin-top:20px;width:100%;max-width:360px;}
+.deck-btn{flex:1;padding:14px;border-radius:13px;background:var(--surface);border:1px solid var(--line);
+  font-weight:600;font-size:14.5px;transition:transform .1s;}
+.deck-btn:active{transform:scale(.97);}
+
+.cmp-list,.seq-list{display:flex;flex-direction:column;gap:11px;}
+.cmp{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:15px;
+  box-shadow:var(--shadow);animation:rise .4s both;}
+.cmp-title{font-size:14px;font-weight:700;margin-bottom:11px;}
+.cmp-row{display:flex;align-items:stretch;gap:9px;}
+.cmp-side{flex:1;border-radius:12px;padding:11px 12px;display:flex;flex-direction:column;gap:3px;}
+.cmp-side.l{background:var(--accent-soft);}
+.cmp-side.r{background:var(--wood-soft);}
+.cmp-side b{font-size:13.5px;}
+.cmp-side.l b{color:var(--accent-deep);}
+.cmp-side.r b{color:#7a5e34;}
+.theme-dark .cmp-side.r b{color:var(--wood);}
+.cmp-side span{font-size:12px;line-height:1.55;color:var(--ink);}
+.cmp-vs{align-self:center;font-size:11px;font-weight:700;color:var(--muted);}
+
+.seq{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:15px;
+  box-shadow:var(--shadow);animation:rise .4s both;}
+.seq-title{font-size:14px;font-weight:700;margin-bottom:11px;}
+.seq-chips{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.seq-chip-wrap{display:inline-flex;align-items:center;gap:6px;}
+.seq-chip{background:var(--accent-soft);color:var(--accent-deep);font-size:12.5px;font-weight:600;
+  padding:6px 11px;border-radius:9px;}
+.seq-arrow{color:var(--muted);font-size:12px;}
+
+/* ───────── 나만의 노트 ───────── */
+.note-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;}
+.note-saved{font-size:12px;color:var(--muted);}
+.note-area{width:100%;min-height:58vh;background:var(--surface);border:1px solid var(--line);
+  border-radius:18px;padding:20px;font-size:15px;line-height:1.85;color:var(--ink);
+  box-shadow:var(--shadow);resize:vertical;}
+.note-area::placeholder{color:var(--muted);}
+
+/* ───────── 탭바 ───────── */
+.tabbar{position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;justify-content:space-around;
+  padding:8px 4px calc(8px + env(safe-area-inset-bottom));
+  background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--line);}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;color:var(--muted);
+  position:relative;transition:color .2s;}
+.tab span{font-size:10px;font-weight:500;}
+.tab.on{color:var(--accent);}
+.tab.on span{font-weight:700;}
+.tab-badge{position:absolute;top:0;right:calc(50% - 20px);background:var(--accent-deep);color:#fff;font-size:9px;
+  min-width:15px;height:15px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  padding:0 3px;font-weight:700;}
+
+/* ───────── 설정 시트 ───────── */
+.sheet-backdrop{position:fixed;inset:0;z-index:50;background:rgba(20,15,8,.45);display:flex;align-items:flex-end;animation:fade .2s;}
+.sheet{width:100%;max-width:var(--maxw);margin:0 auto;background:var(--surface);border-radius:24px 24px 0 0;
+  padding:14px 22px calc(26px + env(safe-area-inset-bottom));animation:slideup .3s cubic-bezier(.2,.8,.2,1);}
+@keyframes slideup{from{transform:translateY(100%);}to{transform:none;}}
+.sheet-handle{width:40px;height:4px;border-radius:3px;background:var(--line);margin:0 auto 16px;}
+.sheet-title{font-family:var(--serif);font-size:20px;margin:0 0 14px;}
+.sheet-row{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line);font-size:14.5px;}
+.sheet-row span{color:var(--muted);}
+.sheet-link{padding:14px 0;font-size:13.5px;color:var(--muted);}
+.sheet-info{font-size:12px;line-height:1.8;color:var(--muted);background:var(--surface2);border-radius:12px;padding:14px;margin:0 0 10px;}
+.sheet-reset{width:100%;padding:13px;border-radius:13px;background:var(--surface2);color:var(--accent-deep);
+  font-weight:700;font-size:14px;margin-bottom:8px;border:1px solid var(--line);}
+.sheet-close{width:100%;margin-top:4px;padding:15px;border-radius:14px;background:var(--accent);color:#fff;font-weight:700;font-size:15px;}
+
+/* 시험일 선택기 */
+.exam-picker{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;margin:2px 0 4px;-webkit-overflow-scrolling:touch;}
+.exam-chip{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:52px;
+  padding:9px 8px;border-radius:13px;background:var(--surface2);border:1px solid var(--line);
+  color:var(--muted);transition:background .18s,border-color .18s,color .18s;}
+.exam-chip:active{transform:scale(.96);}
+.exam-chip .ec-wd{font-size:10.5px;}
+.exam-chip .ec-md{font-family:var(--serif);font-size:14px;font-weight:700;color:var(--ink);}
+.exam-chip.on{background:var(--accent);border-color:var(--accent);}
+.exam-chip.on .ec-wd,.exam-chip.on .ec-md{color:#fff;}
+.exam-note{font-size:11.5px;color:var(--muted);line-height:1.65;margin:0 0 12px;}
+
+/* ───────── 인증 차단 화면 ───────── */
+.authblock{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:44px 30px;text-align:center;}
+.ab-ico{font-size:44px;margin-bottom:18px;}
+.authblock h1{font-family:var(--serif);font-size:25px;font-weight:700;margin:0 0 14px;}
+.authblock p{color:var(--muted);font-size:15px;line-height:1.85;max-width:330px;margin:0;}
+.ab-hint{margin-top:24px;font-size:12.5px;color:var(--muted);background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;padding:15px 17px;max-width:340px;line-height:1.7;}
+.ab-hint code{font-family:var(--sans);color:var(--accent-deep);font-weight:700;background:var(--accent-soft);
+  padding:2px 7px;border-radius:7px;}
+
+/* ───────── 라이선스 동의 팝업 ───────── */
+.lic-backdrop{position:fixed;inset:0;z-index:70;background:rgba(20,15,8,.62);backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;padding:26px;animation:fade .25s;}
+.lic-card{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:32px 26px;
+  max-width:392px;width:100%;box-shadow:var(--shadow-pop);text-align:center;animation:rise .4s both;}
+.lic-ico{font-size:36px;}
+.lic-title{font-family:var(--serif);font-size:21px;font-weight:700;margin:14px 0 4px;}
+.lic-sub{font-size:12.5px;letter-spacing:.16em;color:var(--accent-deep);font-weight:700;}
+.lic-body{font-size:15px;line-height:1.9;color:var(--ink);background:var(--accent-soft);border:1px solid var(--accent-soft);
+  border-radius:16px;padding:18px 18px;margin:16px 0 12px;}
+.lic-body .lic-name{color:var(--accent-deep);font-weight:700;}
+.lic-warn{font-size:12px;color:var(--muted);line-height:1.7;margin:0 0 20px;}
+.lic-btn{width:100%;padding:16px;border-radius:15px;background:var(--accent);color:#fff;font-size:16px;font-weight:700;
+  transition:transform .1s,filter .2s;}
+.lic-btn:active{transform:scale(.98);}
+
+/* ───────── 워터마크 ───────── */
+.wm-overlay{position:fixed;inset:0;z-index:9;pointer-events:none;opacity:.05;
+  background-repeat:repeat;background-position:center;}
+.wm-line{display:flex;align-items:center;gap:7px;margin:2px 0 18px;font-size:12px;color:var(--muted);}
+.wm-line .wm-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+.wm-line b{font-weight:700;color:var(--accent-deep);}
+
+/* ───────── 하단 고지 ───────── */
+.disclaimer{margin:34px auto 4px;max-width:var(--maxw);font-size:10.5px;line-height:1.65;
+  color:var(--muted);opacity:.72;text-align:center;padding:0 10px;letter-spacing:0;}
+
+/* ───────── 문제 세트 그룹 ───────── */
+.qset-group{margin-bottom:16px;animation:rise .4s both;}
+.qset-glabel{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--muted);
+  margin:0 2px 9px;letter-spacing:.02em;}
+.qset-glabel::before{content:"";width:11px;height:2px;border-radius:2px;background:var(--accent);}
+.qset-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.qset-row.r3{grid-template-columns:1fr 1fr 1fr;}
+.qset-row .catbtn{margin-bottom:0;padding:14px 14px;}
+.qset-row .catbtn b{font-size:14.5px;}
+.qset-row .catbtn span{font-size:11px;}
+.catbtn.wide{margin-top:2px;}
+.catbtn .done-mini{color:var(--accent);font-weight:700;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<!-- 앱 소스 (TypeScript / TSX) — 아래 로더에서 직접 변환합니다 -->
+<script type="text/tsx" id="app-source">
+const { useState, useEffect, useMemo } = React;
+
+/* ===================================================================
+   합격노트 · 텔레마케팅관리사 실기  (2026 출제기준 반영)
+   - URL ?user=구매자이름 으로만 구동 · 학습자별 기록 완전 분리
+   - 요약(출제기준 13단원) · 문제(연도·회차별 기출 + 기본개념) · 암기 · 오답 · 노트
+   =================================================================== */
+
+/* ============================ 타입 정의 ============================ */
+interface Topic { t: string; b: string[]; }
+interface SummarySection {
+  id: string; icon: string; title: string; sub: string;
+  table?: string; plc?: boolean; topics: Topic[];
+}
+interface TableData { cols: string[]; rows: string[][]; }
+interface QuizItem { id: string; set: string; cat: string; q: string; a: string; }
+interface Compare { title: string; l: [string, string]; r: [string, string]; }
+interface Sequence { title: string; steps: string[]; }
+interface AbbrCard { f: string; b: string; }
+type Grade = "O" | "X";
+interface Progress { quiz: Record<string, Grade>; lastVisit: number | null; }
+type Theme = "light" | "dark";
+
+/* 시험일 — 7/18 ~ 8/5 사이에서 사용자가 설정 가능 (기본 7/18) */
+const EXAM_MIN: string = "2026-07-18";
+const EXAM_MAX: string = "2026-08-05";
+const EXAM_DEFAULT: string = "2026-07-18";
+const WEEKDAYS_KO: string[] = ["일", "월", "화", "수", "목", "금", "토"];
+function parseExam(s: string): Date { return new Date(s + "T00:00:00"); }
+function pad2(n: number): string { return String(n).padStart(2, "0"); }
+function fmtExamLong(s: string): string {
+  const d = parseExam(s);
+  return (d.getMonth() + 1) + "월 " + d.getDate() + "일 (" + WEEKDAYS_KO[d.getDay()] + ")";
+}
+function fmtExamDot(s: string): string {
+  const d = parseExam(s);
+  return d.getFullYear() + "." + pad2(d.getMonth() + 1) + "." + pad2(d.getDate());
+}
+interface ExamOption { v: string; wd: string; md: string; }
+const EXAM_OPTIONS: ExamOption[] = (() => {
+  const out: ExamOption[] = [];
+  const end = parseExam(EXAM_MAX).getTime();
+  for (let t = parseExam(EXAM_MIN).getTime(); t <= end; t += 86400000) {
+    const d = new Date(t);
+    out.push({
+      v: d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()),
+      wd: WEEKDAYS_KO[d.getDay()],
+      md: (d.getMonth() + 1) + "." + d.getDate(),
+    });
+  }
+  return out;
+})();
+
+/* URL ?user= 파라미터 추출 (학습자 식별·기록 분리의 기준) */
+function getUserParam(): string {
+  try {
+    const raw = new URLSearchParams(window.location.search).get("user") || "";
+    return decodeURIComponent(raw).replace(/[<>&"'\/\\]/g, "").trim();
+  } catch (e) { return ""; }
+}
+const USER: string = getUserParam();
+/* 학습자별 네임스페이스 — 구매자 이름이 다르면 저장 공간이 완전히 분리됨 */
+const NS: string = "hapkyeok_v2_" + encodeURIComponent(USER) + "_";
+
+/* ============================ 요약 데이터 (출제기준 13단원 · 목차 순) ============================ */
+const SUMMARY: SummarySection[] = [
+  {
+    id: "ch01", icon: "📞", title: "01 · 인·아웃바운드 판매 채널 운영관리",
+    sub: "채널 · 스크립트 · 콜드콜 ★★★",
+    topics: [
+      { t: "인바운드 vs 아웃바운드 ★", b: [
+        "**인바운드(고객 주도형)** — 광고·홍보를 본 고객이 먼저 거는 전화. 문의 응대가 많아 **Q&A(문답집)** 활용도가 높음",
+        "인바운드 활용분야 — 상품 주문·예약 접수, 문의·상담, A/S·교환·반품·환불 접수, 클레임 처리, 신고·분실 접수",
+        "**아웃바운드(기업 주도형)** — 기업이 보유한 **고객 DB**로 상담사가 직접 거는 전화. 능동적·목표지향적이라 **스크립트 의존도**가 높음",
+        "아웃바운드 활용 — 해피콜·시장(만족도)조사·판촉·연체대금 회수·방문약속. **비판매 분야 = 해피콜·여론조사**" ] },
+      { t: "아웃바운드 전개 순서 · 콜드콜 ★", b: [
+        "전개 순서 — 데이터 수집·분석 → 통화 준비·시도 → 통화(상담) → 데이터 처리 → 종결·사후관리",
+        "**콜드콜(Cold Call·Junk Call)** — 사전 동의·관계 없이 마구잡이로 거는 냉담 통화. 거부감이 크고 성공률이 낮음" ] },
+      { t: "스크립트 ★", b: [
+        "**정의** — 상담의 표준 대화 대본(도입→상담 진행→마무리·감사). 상담 능력을 일정 수준으로 끌어올리고 설득력을 높이는 도구",
+        "**필요성** — 돌발상황 침착 대응, 서비스 표준화, 생산성 향상, 응대 능력 향상·내용 일관성, 상담 효과 측정 가능",
+        "**좋은 스크립트 5원칙(5C)** — Clear(알기 쉽게)·Concise(간단명료)·Convincing(설득력)·Conversational(구어체)·Customer(고객중심)",
+        "작성 10원칙 — 활용목적 명확·간단명료·이해·유연·설득확신·고객중심·상황대응·상황관리·차별성·회화체" ] },
+      { t: "상담 절차 흐름 ★", b: [
+        "**아웃바운드 4단계(실무)** — 도입부 → 상담부 → 마무리·감사 → DB 정리",
+        "**아웃바운드 판매 8단계(세부)** — 도입 → 탐색 → 해석·요약 → 특징·혜택 제시 → 접근 시도 → 접근 계약 → 확신·보증 → 연결판매",
+        "**인바운드 상담 절차** — 상담 준비 → 첫인사·소개 → 니즈 파악 → 해결방안 제시 → 동의·재확인 → 종결",
+        "고객 유형·상황별 반론 스크립트를 미리 준비하고 **롤플레잉** 반복이 핵심" ] },
+      { t: "채널별 업무 처리", b: [
+        "전화·문자·게시판 등 채널마다 고객 성격이 다름 → 채널 특성에 맞춰 주문 접수·수정, 취소·환불, VOC 처리",
+        "접속 고객의 특성을 먼저 파악한 뒤 정확한 정보를 전달하는 것이 기본" ] },
+    ],
+  },
+  {
+    id: "ch02", icon: "🖥️", title: "02 · 통신판매 시스템 운용",
+    sub: "콜 처리 · 장애 대응 (출제 X · 흐름만)",
+    topics: [
+      { t: "콜 처리 시스템", b: [
+        "**인바운드 시스템** — 인입 문의를 처리. 콜 로드(통화량) 예측",
+        "**아웃바운드 시스템** — 고객에게 전화를 걸어 판매. 고객 DB 분배로 상담사에게 효율 배정" ] },
+      { t: "주요 용어", b: [
+        "**ACD(자동호분배)** — 통화 중이 아닌 상담사에게 순서대로 균등 분배(쏠림 방지)",
+        "**IVR(자동응답)** — 음성안내로 고객 분류·처리, 평균처리시간·포기율 등 리포트 제공",
+        "콜 라우팅 — 인입콜을 어디로 보낼지 경로 설정 / 다이얼링 — Preview·Predictive·Progressive·Power·Manual 발신 방식" ] },
+      { t: "시스템 장애 대응", b: [
+        "대응 프로세스를 미리 숙지해 즉시 실행",
+        "시스템 흐름 이해 + 장애 대응 매뉴얼 작성, 복구 후 재발방지 피드백으로 개선" ] },
+    ],
+  },
+  {
+    id: "ch03", icon: "💝", title: "03 · 통신판매 고객관계관리(CRM)",
+    sub: "VOC · 프로세스 · RFM · 우수고객 ★★★",
+    topics: [
+      { t: "VOC 관리", b: [
+        "**VOC(고객의 소리)** — 문의·불만·제안 등 모든 반응. 체계적으로 모아 분석 → 경영 반영 → 고객 피드백으로 연결",
+        "경로별 수집·배분 → 시스템 확인·처리 → 해피콜로 결과 피드백",
+        "문제점 파악으로 2·3차 불만 예방, 빠른 응대로 불만고객을 **충성고객으로 전환**, 신규확보보다 저렴한 기존고객 유지에 기여" ] },
+      { t: "CRM 정의 · 목적 ★", b: [
+        "**정의** — 고객을 정확히 이해하고 원하는 제품·서비스를 제공해 장기관계를 쌓아 **고객생애가치(LTV)**를 극대화하는 과정",
+        "목적 — 신규 확보·기존 유지·이탈 방지·비용 절감·매출 및 충성도 향상" ] },
+      { t: "CRM 프로세스 · 유형 · 비전 ★", b: [
+        "**4 프로세스** — 선별 → 획득 → 개발 → 유지",
+        "**유형** — 분석적(데이터 분석·예측)·운영적(접점 자동화)·협업적(채널 통합 소통)",
+        "**비전 4요소** — 고객 중심·장기적 관계·상호 이익·통합 관리",
+        "특징 — 고객 지향적·DB 마케팅 활용·쌍방향 커뮤니케이션·생애 전체 장기관계",
+        "발전 4단계 — 준비 → 도입 → **확산(시스템 구축·기업전략 중심 관리)** → 통합" ] },
+      { t: "CRM 중점 이동 · 고객점유율 ★2026", b: [
+        "중점 이동 — 시장점유 → **고객점유**, 고객획득 → **고객유지**, 제품판매 → **고객관계**",
+        "**고객점유율 > 시장점유율** — CRM은 한 고객의 지속 거래 비중(고객점유율·고객만족도)을 더 중요하게 봄",
+        "**LTV** — 첫 구매부터 미래까지의 순이익 가치(신뢰도·기여도·반응률·성장성에 영향)" ] },
+      { t: "우수고객 관리·평가 · RFM ★", b: [
+        "**RFM 분석** — Recency(최근성)·Frequency(빈도)·Monetary(금액)으로 가치 고객을 선별·등급화하는 대표 기법",
+        "고객 분류(생애주기) — 잠재 → 가망 → 신규 → 기존 → **핵심(충성)** → 이탈",
+        "충성고객 — 반복 구매·긍정 구전·가격 민감도 낮음 / 충성도 유형 = 행동적(재구매)·태도적(애착)",
+        "**80:20 파레토** — 매출의 80%는 상위 20% 우량고객(VIP 마케팅 배경) ↔ **롱테일** = 사소한 다수가 큰 가치(정반대)",
+        "**한계고객** — 적자를 초래하는 고객 → **디마케팅(수요 억제)** 대상" ] },
+      { t: "고객정보 관리(1·2차 자료)", b: [
+        "**1차자료** — 문제 해결을 위해 직접 조사·수집(실험·질문·관찰·전화·면접·우편). 목적엔 맞지만 시간·비용↑",
+        "**2차자료** — 다른 목적으로 이미 만들어진 자료(신문·논문·통계·정부간행물·내부자료). 빠르고 저렴하나 유용성 제한",
+        "개인정보 보호법에 따라 고객 정보를 안전하게 보호하는 것이 무엇보다 중요" ] },
+    ],
+  },
+  {
+    id: "ch04", icon: "💬", title: "04 · 통신판매 고객 상담",
+    sub: "MOT · 니즈파악 · 화법 · 의사소통 ★★★",
+    topics: [
+      { t: "고객접점(MOT) ★2026", b: [
+        "**MOT(진실의 순간)** — 얀 칼슨. 고객이 직원과 접하는 결정적 순간(약 15초)이 회사 이미지·성공을 좌우",
+        "**고객응대관계 3특징** — 쌍방향·비대면·DB 활용. 비대면이라 표정·분위기를 못 전하므로 접점마다 고객 유형을 분류해 응대",
+        "고객만족이 중요한 이유 — 재구매·유지로 수익 증대, 긍정적 구전·이미지 향상, 신규 획득보다 낮은 유지 비용" ] },
+      { t: "고객 니즈 파악 · 질문기법 ★", b: [
+        "**SPIN** — 상황질문(S)·문제질문(P:잠재 니즈 도출)·시사질문(I:문제의식 증대)·해결질문(N)",
+        "**프로빙(Probing)** — 응답이 불충분할 때 명확한 답을 얻으려 계속 캐묻는 기법",
+        "**래더링(Laddering)** — 속성 → 편익 → 가치의 계층 연결로 핵심 니즈를 파악",
+        "**개방형 질문**(다양한 의견·니즈 탐색 / 정리 어려움) ↔ **폐쇄형 질문**(양자택일·다지선다, 응답·집계 쉬움 / 정보 제한)" ] },
+      { t: "응대 화법 — FAB · 경청 ★", b: [
+        "**FAB** — Feature(특징)·Advantage(장점)·Benefit(이점). 아웃바운드 판매 시 강조할 것 = **편익(Benefit·니즈)**",
+        "혜택 판매 — 니즈 파악·전문 설명으로 만족도를 높여 고객만족 창출",
+        "상담원 자세 — 비판·평가·가로막기 금지, 편견 없이 집중 / **공감적 경청**(고객 입장에서 기분·감정 이해)",
+        "**라포(Rapport)** — 공감대를 빨리 형성할수록 상담 성공에 가까워짐" ] },
+      { t: "의사소통(커뮤니케이션) ★", b: [
+        "**구성요소** — 발신자 → 부호화(encoding) → 메시지 → 해독 → 수신자 → 피드백 (+ 잡음)",
+        "**분류** — 언어적/비언어적 · 수직/수평 · 공식/비공식",
+        "**장애요인 4가지** — 물리적·심리적·의미적·기술적 (예: 잡음(물리)·선입견(심리)·용어 차이(의미)·매체 오류(기술))",
+        "스트레스 관리 — 표준화법을 지키고 올바른 언어를 쓰면 감정 소모↓(전문 상담사의 역량)" ] },
+    ],
+  },
+  {
+    id: "ch05", icon: "🛎️", title: "05 · 영업 고객불만관리",
+    sub: "불만 해결 4단계 · 클레임 ★ 기본",
+    topics: [
+      { t: "불만 해결 4단계", b: [
+        "① 수집 → ② 분석 → ③ 해결방안 마련 → ④ 해결과정 점검",
+        "수집·분석 — 접수 창구 마련·기간별 서식으로 이력 누적, 유사성·중요성·발생시기·빈도로 범주화, 발생 원인 도출",
+        "해결방안·점검 — 유관부서 협조, **제조물책임법·소비자기본법** 등 법적 책임 범위 확인, 비용 분석 후 해결책 실행, 만족도 설문·상품 개선 제안" ] },
+      { t: "불만(Complain)과 클레임(Claim) 원인", b: [
+        "**고객 불만 원인** — 사전 기대와 사후 결과의 차이, 구매 후 태도 변화, 상품의 하자·결함, 약속·거래조건 불이행",
+        "**클레임 원인** — 상담원과의 불충분한 소통, 고객의 지나친 기대, 수준 이하의 서비스 제공",
+        "**까다로운 고객 응대** — 인내심 갖고 경청, 스스로 결정하도록 돕고, **먼저 칭찬**하는 응대가 효과적" ] },
+    ],
+  },
+  {
+    id: "ch06", icon: "📊", title: "06 · 고객분석과 데이터 관리",
+    sub: "데이터 6단계 · 분석기법 ★★★",
+    topics: [
+      { t: "데이터 관리 6단계", b: [
+        "대상 선정 → 정보 분석 → 유형 결정 → 수집 → 정제 → 유지",
+        "대상고객 선정 — 분석 목적에 맞는 분류 기준으로 대상 고객 선별",
+        "유형 결정 — 내·외부, 상·하류 공급망, 관계 형성도에 따라 범위 결정",
+        "수집·정제·유지 — 유형별 수집 → 이상치·결측치 보완 → 보안등급별 접근권한 관리" ] },
+      { t: "대상고객 선정 · 고객유형", b: [
+        "**리스트 스크리닝** — 보유 DB에서 우량·가망 고객만 선별 추출하는 작업",
+        "내부고객 = 직원 / 외부고객 = 구매 소비자" ] },
+      { t: "고객정보 분석 기법 ★", b: [
+        "**회귀분석**(변수 간 선형 관계)·**판별분석**(집단 차이가 어떤 변수 때문인지)·**군집분석**(비슷한 대상끼리 그룹 분류)",
+        "**데이터 마이닝** — 축적된 데이터 속 숨은 규칙·패턴을 찾아 의사결정에 활용(상관관계·시계열)",
+        "**데이터 웨어하우스** — 의사결정 지원용으로 통합·축적한 대규모 데이터 저장소",
+        "**텍스트 마이닝** — 비정형 텍스트 자료에서 의미 있는 정보 추출",
+        "**DB 마케팅** — 고객 특성·구매행동을 DB화해 미래 구매 예측·이탈 방지, 1:1 관계 구축",
+        "**로그 분석** — 웹사이트 접속·클릭 등 로그 기록을 분석해 행동 파악" ] },
+    ],
+  },
+  {
+    id: "ch07", icon: "🧭", title: "07 · 고객지원과 고객관리 실행",
+    sub: "요구사항 파악·대응 (출제 X · 흐름만)",
+    topics: [
+      { t: "고객 요구사항 파악·대응", b: [
+        "요구사항 파악 → 조직 특성 따라 분류 → 담당자 지정",
+        "**원스톱(One-stop) 처리** — 한 번의 접촉으로 문제가 끝까지 해결되게 하는 것이 만족도를 높이는 기본 원칙",
+        "대응 매뉴얼·과거 이력 담당자 교육, 처리 과정 고객에게 설명, 지연 시 별도 방안 마련, 완료까지 전 과정 모니터링" ] },
+    ],
+  },
+  {
+    id: "ch08", icon: "📋", title: "08 · 고객 필요정보 제공",
+    sub: "정보 산출 · 제공 · 관리 ★ 기본",
+    topics: [
+      { t: "정보 제공 3단계", b: [
+        "① 필요정보 산출 → ② 경로별 제공 → ③ 정보 관리",
+        "**필요정보 산출** — 고객 유형별 상품을 정하고, 내·외부 환경을 고려해 자료를 모아 고객 특성에 맞게 가공(**Q&A 시트**)",
+        "**경로별 제공** — 고객 유형에 맞는 최적 경로 선택 + 방법·시기 계획대로 전달",
+        "**정보 관리** — 경로별 반응 분석으로 제공 항목 조정, 제공 이력 관리" ] },
+    ],
+  },
+  {
+    id: "ch09", icon: "📈", title: "09 · 통신판매 성과관리",
+    sub: "목표 · 평가·보상 · 모니터링 · 지표 ★★★",
+    topics: [
+      { t: "성과관리 4단계 · SMART ★", b: [
+        "① 목표 설정 → ② 성과 평가 → ③ 보상 → ④ 모니터링",
+        "**SMART** — Specific(구체적)·Measurable(측정가능)·Attainable(달성가능)·Result(결과지향)·Time-bound(기한명확)",
+        "평가 — 업적평가·역량평가 구분, 등급화, 정성평가는 정량자료 활용",
+        "보상 — **작은 보상을 수시로**, 금전·비금전 보상을 섞고 결과를 다음 목표에 피드백" ] },
+      { t: "모니터링(MSSSPC) ★", b: [
+        "**Mystery Call** — 고객인 척 응대 품질 점검 / **Silent** — 실시간 조용히 청취",
+        "**Side-by-side** — 옆에 앉아 직접 관찰 / **Self** — 본인 녹취 점검 / **Peer** — 동료 상호 / **Call Taping** — 통화 녹취 분석",
+        "목적 — 통화품질 평가·관리, 상담원 스킬 향상, 고객만족 관리, 코칭·교육, 니즈 파악을 통한 수익성 향상",
+        "통화품질 = 상담 자체 품질 ↔ 모니터링 = 그 품질을 점검하는 활동" ] },
+      { t: "성과 분석 지표 · 계산 ★", b: [
+        "**CPC** 콜당 평균비용 · **CPO** 주문당 평균비용 · **CR** 계약률(리드를 주문으로 전환) · **ASA** 평균응답속도",
+        "**CRR(반응률)** = (총 반응수 ÷ 총 발신수) × 100 · **업무점유율** = (총통화+총후처리) ÷ (총통화+후처리+콜대기)",
+        "계산 예 — CRR = (800+400) ÷ 30,000 × 100 = **4%**",
+        "인바운드 지표 — 통화포기율·서비스레벨(SL: 목표 시간 내 응답 비율)·평균 통화시간·**불통률**(교환기까지 닿지 못한 콜 비율)·ASA" ] },
+      { t: "SERVQUAL — 서비스 품질 5요소(RATER) ★", b: [
+        "**신뢰성(Reliability)·확신성(Assurance)·유형성(Tangibles)·공감성(Empathy)·대응성(Responsiveness)**",
+        "모니터링 품질 평가의 대표 척도로 자주 출제" ] },
+    ],
+  },
+  {
+    id: "ch10", icon: "👥", title: "10 · 통신판매 조직운영관리",
+    sub: "인력 · 리더십 · 교육 · 인사평가 ★★★",
+    topics: [
+      { t: "인력 관리 · Erlang C ★", b: [
+        "전략·목표에 따라 운영·채용 계획을 세우고, 채널(인/아웃) 특성에 맞게 투입·모집·선발",
+        "**콜센터 인력 산정(Erlang C) 4변수** — 평균 통화시간·평균 마무리시간·예상 인입 콜 수·목표 서비스레벨",
+        "**결손율** — 휴가·이직·병가·교육·회의 등 비상담시간의 비율",
+        "업무 증가 시 조치 — 인·아웃 인원 조정, 초과근무·교대 운영, 스크립트·시스템 효율화" ] },
+      { t: "리더십 유형 ★2026", b: [
+        "기본 분류 — 전제형·민주형·방임형·주도형(의사결정 권한 위임 정도)",
+        "**허시-블랜차드 상황적 리더십** — 부하 성숙도에 따라 지시형·코칭형·지원형·**위임형**(저지시·저주도)",
+        "**변혁적 리더십** — 비전 제시로 가치·태도를 변화시켜 기대 이상의 성과 유도(카리스마·영감적 동기부여·지적 자극·개별적 배려) ↔ 거래적(보상·교환)" ] },
+      { t: "교육훈련 실시 ★", b: [
+        "**커크패트릭 4단계 평가** — 반응 → 학습 → 행동 → 결과 (1단계 반응평가가 가장 기본)",
+        "**교육 설계 순서** — 요구분석·도입 → 설계 → 개발 → 실행 → 평가",
+        "역할연기(Role Playing) — 역지사지로 문제해결력↑ / 내부마케팅 — 종업원을 내부 고객으로 보고 동기 부여 → 외부 고객 만족으로 연결",
+        "교육 목적 — 직무능력 향상, 서비스 품질·생산성 향상, 동기부여·이직 감소, 조직 적응" ] },
+      { t: "인사평가 · 운영 형태", b: [
+        "**평정척도법** — 등급 척도로 평가하는 대표 인사평가법 / 평가 요소 = 업적·역량·태도(성과)",
+        "**직무평가 4종** — 서열법·분류법·요소비교법·점수법(직무의 상대적 가치 평가)",
+        "**인하우스(자체운영)** — 장점: 직접 관리·통제·정보유출 방지·즉각 대응 / 단점: 초기 투자비↑·시스템 구축 어려움",
+        "**재택근무 장점** — 출퇴근 시간·비용 절약, 설비비 절감, 시간관리 자유, 우수직원 유인, 기상악화 등 위험 감소",
+        "동기부여 — 매슬로 욕구 5단계: 생리 → 안전 → 사회(소속) → 존경 → 자아실현" ] },
+    ],
+  },
+  {
+    id: "ch11", icon: "🌐", title: "11 · 통신판매 환경 분석",
+    sub: "3C·SWOT · 조사방법론 · 소비자행동 ★★★",
+    table: "survey",
+    topics: [
+      { t: "분석 영역 · 3C · SWOT ★", b: [
+        "분석 영역 — 시장동향·경쟁사·고객·자사 내부",
+        "**마케팅 3C** — Company(자사)·Customer(고객)·Competitor(경쟁사). 환경 = 미시(내부 통제 가능) + 거시(외부 통제 불가)",
+        "**SWOT** — 강점(S)·약점(W)=**내부**, 기회(O)·위협(T)=**외부**",
+        "**마이클 포터 5 Forces** — 기존 경쟁·대체품 위협·구매자 협상력·공급자 협상력·신규진입 위협",
+        "**BCG 매트릭스** — 스타(성장↑점유↑)·물음표(성장↑점유↓)·캐시카우(성장↓점유↑·고수익)·도그(성장↓점유↓·퇴출)" ] },
+      { t: "조사 종류 3유형 ★", b: [
+        "**탐색조사** — 문제 정의·가설 설정(전문가의견·문헌·사례연구·FGI)",
+        "**기술조사** — 특성을 묘사(서베이·패널·횡단·종단). 광범위 모집단을 많은 변수로 조사",
+        "**인과조사** — 원인(독립)·결과(종속) 관계 규명(실험조사)" ] },
+      { t: "조사방법 · 종단/횡단 · 정성/정량 ★", b: [
+        "장단점은 아래 비교표 참고(전화·면접·우편)",
+        "패널·온라인조사 — 비용↓·변화 추적 가능 / 표본 편중·중복응답·추적 곤란",
+        "**종단** = 같은 대상을 시간 흐름대로(패널) ↔ **횡단** = 한 시점에 다수 비교",
+        "**정성** = 심층면접·FGI(질적) ↔ **정량** = 수치로 계량화" ] },
+      { t: "표본추출 · 척도 ★", b: [
+        "**확률** — 단순무작위·층화(비례/비비례)·군집·계통 / **비확률** — 편의·판단·할당·눈덩이",
+        "**층화추출** — 특성에 따라 모집단을 여러 층으로 나눈 뒤 각 층에서 무작위 추출",
+        "**척도 4종** — 명목(분류) → 서열(순서) → 등간(간격·절대0 없음) → 비율(절대0 있음)" ] },
+      { t: "신뢰성·타당성 · 설문지 ★", b: [
+        "**신뢰성** — 반복 측정 시 일관성(향상: 문항↑·모호성 제거·동일질문 반복·불성실 제외)",
+        "**타당성** — 측정하려는 것을 제대로 측정(내용·개념·기준 타당도). 좋은 척도 조건 = 타당성·신뢰성·수용성·실용성",
+        "오류 — 표본오류(표본이 모집단 대표 못함)·비표본오류(측정·입력·이해·설명 과정의 오차)",
+        "설문지 — 작성 후 반드시 **사전조사(pre-test)**로 검토. 쉬운→어려운·일반→특수·개방형→폐쇄형, **유도성 질문 회피**(가치중립)" ] },
+      { t: "소비자(고객) 행동 분석 ★", b: [
+        "**구매의사결정 5단계** — 문제 인식 → 정보 탐색 → **대안 평가** → 구매 → 구매 후 평가",
+        "구매심리 — AIDMA(주의→관심→욕구→기억→행동) / 온라인형 **AIDA**(기억 제외)",
+        "심리적 요인 4가지 — 동기·지각·학습·신념(태도). 매슬로 욕구 5단계 = '동기'의 대표 이론",
+        "라이프스타일·성격 — **AIO**(활동·관심·의견)·**Big Five**(외향·친화·성실·개방·신경증). 관여도가 높을수록 정보탐색·대안평가 신중" ] },
+    ],
+  },
+  {
+    id: "ch12", icon: "🎯", title: "12 · STP 전략 수립",
+    sub: "세분화 · 표적시장 · 포지셔닝 ★★★",
+    topics: [
+      { t: "STP 흐름", b: [
+        "Segmentation(시장세분화) → Targeting(표적시장 선정) → Positioning(포지셔닝)" ] },
+      { t: "시장세분화(S) ★", b: [
+        "정의 — 비슷한 성향의 고객을 동질 집단으로 묶어 그룹으로 나누는 것(고객 구별)",
+        "**4대 변수** — 지리적·인구통계적·심리분석적·행동분석적",
+        "지리적(지역·기후·도시규모) / 인구통계(성별·나이·소득·직업·종교) / 심리분석(관심·계층·개성·라이프스타일) / 행동분석(추구편익·사용량·상표애호도·구매준비단계)",
+        "효과적 요건 — 내부 동질·외부 이질, 측정·접근·행동 가능성, 규모의 경제성(실질성)" ] },
+      { t: "표적시장 선정(T) ★", b: [
+        "**비차별화** — 한 제품으로 전체 시장(대량마케팅)",
+        "**차별화** — 세분시장마다 다른 제품·프로그램",
+        "**집중화** — 한두 시장에 자원 집중(자원이 한정된 기업)",
+        "**시장개척자(선발 진입) 전략 장점** — 선점 이미지·브랜드 인지 선점, 유통·고객 선확보, 진입장벽 구축, 경험효과 원가우위, 전환비용 형성" ] },
+      { t: "포지셔닝(P) ★2026", b: [
+        "정의 — 목표시장 고객 마음속에 자사 제품의 **전략적 위치**를 정립(목적: 경쟁우위 확보)",
+        "유형 — 가격·제품속성(가장 많이 쓰임)·이미지·사용목적(상황)·경쟁제품·제품사용자",
+        "**재포지셔닝** — 욕구 변화에 맞춰 위치를 바꾸는 것 / 시점: 새 기회 발견, 경쟁 변화·진입, 포지션 진부화, 판매 침체, 취향 변화 시" ] },
+    ],
+  },
+  {
+    id: "ch13", icon: "🛍️", title: "13 · 마케팅믹스(4P) 전략 수립",
+    sub: "PLC · 제품 · 가격 · 유통 · 촉진 ★★★",
+    plc: true,
+    topics: [
+      { t: "마케팅 4P & 4C", b: [
+        "**4P** — Product(제품)·Price(가격)·Place(유통)·Promotion(촉진)",
+        "**4C** — Customer(고객가치)·Cost(비용)·Convenience(편의)·Communication(소통)" ] },
+      { t: "제품수명주기(PLC) · 제품 분류 ★", b: [
+        "도입기 → 성장기 → 성숙기 → 쇠퇴기 (자세한 비교는 아래 표 참고)",
+        "**성장기** — 판매·이익 급증, 점유율 확대, 침투가격, 브랜드 광고",
+        "**성숙기** — 판매 정점 후 둔화·경쟁 치열, 방어적 가격, 상표 재활성화, 점유율 방어",
+        "제품 분류 — 소비재(편의품·선매품·전문품·비탐색품) / 산업재(설비·보조장비·원자재·부품) / 내구재·비내구재 / 확장제품(핵심·실체+보증·A/S)" ] },
+      { t: "가격전략 ★", b: [
+        "**고가격 유리** — 규모의 경제 효과 작을 때, 수요 가격탄력성 낮을 때, 경쟁자 적고 진입장벽 높을 때, 높은 품질로 새 고객층 노릴 때",
+        "**저가격 유리** — 가격탄력성 높을 때, 경쟁자 많을 것으로 예상될 때, 본원적 수요 자극, 원가우위 확보 시",
+        "**초기고가(스키밍)** — 처음 높게 후 인하 ↔ **침투가격** — 처음부터 낮게 시장 선점",
+        "가격결정법 — 원가가산·목표이익·가치기반·경쟁기반 / 결정 요인: 내부(목표·믹스·원가·정책)·외부(시장수요·경쟁·법)" ] },
+      { t: "유통전략 · VMS ★", b: [
+        "**전속적 유통** — 한 지역 한 점포 독점·강한 통제(고급차·귀금속·명품)",
+        "**선택적 유통** — 자격 갖춘 소수 중간상·노출/비용 균형(의류·가구·가전)",
+        "**개방적(집약적) 유통** — 점포 수 최대로 노출 극대화(편의품)",
+        "**총거래 수 최소화의 원칙** — 중간상 개입으로 거래 총량↓ → 양쪽 비용 절감. 도매상 기능: 시장확대·재고유지·주문처리·시장정보·고객서비스 대행",
+        "**VMS(통합도 약→강)** — 관리형 → 계약형 → 기업형 / 무점포 판매 = 전자상거래·카탈로그·방문판매" ] },
+      { t: "촉진전략 ★", b: [
+        "촉진 4대 수단 — 광고·홍보(PR)·인적판매·판매촉진",
+        "**푸시(Push)** — 중간상·판매원을 통해 직접 판매 권유(방문판매 등) ↔ **풀(Pull)** — 광고로 소비자가 직접 찾게 끌어당김",
+        "**AIDA** — Attention → Interest → Desire → Action",
+        "**교차판매** — 연관 상품 추가 구매 유도 ↔ **업셀링** — 더 비싼 상품으로 유도",
+        "구매 커뮤니케이션 효과 — 지각된 위험 감소·구매 가능성↑·상품 자산 구축·긍정적 구전·상표 인지 증대",
+        "웹사이트·인터넷 마케팅 — SEO·콘텐츠·이메일·SNS·제휴 등 온라인 채널로 본원적 수요 자극" ] },
+    ],
+  },
+  {
+    id: "appx", icon: "🌿", title: "부록 · 서비스 마케팅",
+    sub: "서비스 4대 특징 · SERVQUAL ★★",
+    topics: [
+      { t: "서비스의 4대 특징", b: [
+        "**무형성** — 형태가 없어 경험 전엔 평가 어려움(해소: 물적 증거·유형적 단서)",
+        "**소멸성** — 생산과 동시에 사라져 저장 불가",
+        "**이질성(비표준성)** — 제공자·상황에 따라 품질이 달라짐",
+        "**비분리성(동시성)** — 생산과 소비가 동시에 일어남" ] },
+      { t: "SERVQUAL(RATER)", b: [
+        "서비스 품질 5요소 — 신뢰성·확신성·유형성·공감성·대응성 (09단원 모니터링과 연계)" ] },
+    ],
+  },
+];
+
+const PLC_TABLE: TableData = {
+  cols: ["", "도입기", "성장기", "성숙기", "쇠퇴기"],
+  rows: [
+    ["판매량", "저성장", "고성장", "정점→감소", "쇠퇴"],
+    ["이익", "거의 없음", "흑자전환", "정점(감소 시작)", "거의 없음"],
+    ["경쟁사", "소수", "증가", "다수(치열)", "감소"],
+    ["가격", "고/저가격", "침투가격", "방어적 가격", "재고가격"],
+    ["전략", "인지 형성", "점유율 확대", "점유율 방어", "단계적 철수"],
+  ],
+};
+const SURVEY_TABLE: TableData = {
+  cols: ["기준", "전화", "면접", "우편"],
+  rows: [
+    ["비용", "저렴", "높음", "낮음"],
+    ["응답률", "높음", "높음", "낮음"],
+    ["상세정보", "어려움", "많음", "어려움"],
+    ["조사기간", "짧음", "김", "김"],
+    ["조사자 통제", "가능", "어려움", "불가"],
+  ],
+};
+
+/* ============================ 문제 데이터 ============================
+   set: 출제 구분("basic"=기본개념, "2024-1"=2024년 1회 등)
+   cat: 단원 / q: 문제 / a: 정답(해설 없이 답만 · 줄바꿈 \n)
+   ※ 기출은 복원 자료로 일부 부정확할 수 있어 요약본 개념과 일치하도록 정리함     */
+const QUIZ: QuizItem[] = [
+  /* ── 기본개념 (기출 아님 · 핵심 정의) ── */
+  { id:"b01", set:"basic", cat:"인·아웃바운드", q:"인바운드와 아웃바운드 텔레마케팅의 차이를 쓰시오.", a:"인바운드: 고객이 먼저 거는 고객 주도형(주문·문의·A/S, Q&A 활용)\n아웃바운드: 기업이 거는 기업 주도형(능동·목표지향, 고객 DB·스크립트 활용)" },
+  { id:"b02", set:"basic", cat:"인·아웃바운드", q:"스크립트란 무엇인가?", a:"상담의 표준 대화 대본(도입·본론·마무리)으로, 상담 능력과 설득력을 높이는 도구" },
+  { id:"b03", set:"basic", cat:"인·아웃바운드", q:"콜드콜(Cold Call)이란?", a:"거래 관계가 없던 고객에게 사전 동의 없이 일방적으로 거는 첫(냉담) 통화" },
+  { id:"b04", set:"basic", cat:"CRM", q:"CRM(고객관계관리)의 정의를 쓰시오.", a:"고객을 이해해 장기적 관계를 구축하고 고객생애가치(LTV)를 극대화하는 관리 과정" },
+  { id:"b05", set:"basic", cat:"CRM", q:"CRM 프로세스 4단계를 순서대로 쓰시오.", a:"선별 → 획득 → 개발 → 유지" },
+  { id:"b06", set:"basic", cat:"CRM", q:"RFM 분석의 세 요소를 쓰시오.", a:"Recency(최근성)·Frequency(구매빈도)·Monetary(구매금액)" },
+  { id:"b07", set:"basic", cat:"CRM", q:"고객생애가치(LTV)란?", a:"한 고객이 거래 전 기간 동안 기업에 제공하는 총 순이익 가치" },
+  { id:"b08", set:"basic", cat:"고객 상담", q:"MOT(진실의 순간)란?", a:"고객이 직원·기업과 접하는 결정적 순간(약 15초)으로, 기업 이미지를 좌우함" },
+  { id:"b09", set:"basic", cat:"고객 상담", q:"SPIN 질문기법의 4단계를 쓰시오.", a:"상황질문(S)·문제질문(P)·시사질문(I)·해결질문(N)" },
+  { id:"b10", set:"basic", cat:"시장조사", q:"조사 목적에 따른 3가지 유형을 쓰시오.", a:"탐색조사 · 기술조사 · 인과조사" },
+  { id:"b11", set:"basic", cat:"시장조사", q:"확률 표본추출 방법 4가지를 쓰시오.", a:"단순무작위 · 층화 · 군집 · 계통 추출" },
+  { id:"b12", set:"basic", cat:"시장조사", q:"측정 척도 4종을 순서대로 쓰시오.", a:"명목 → 서열 → 등간 → 비율 척도" },
+  { id:"b13", set:"basic", cat:"시장조사", q:"신뢰성과 타당성의 차이를 쓰시오.", a:"신뢰성: 반복 측정 시 일관된 결과가 나오는가\n타당성: 측정하려는 것을 정확히 측정했는가" },
+  { id:"b14", set:"basic", cat:"STP·환경", q:"STP 전략의 순서를 쓰시오.", a:"시장세분화(S) → 표적시장 선정(T) → 포지셔닝(P)" },
+  { id:"b15", set:"basic", cat:"STP·환경", q:"시장세분화 4대 변수를 쓰시오.", a:"지리적 · 인구통계적 · 심리분석적 · 행동분석적 변수" },
+  { id:"b16", set:"basic", cat:"STP·환경", q:"표적시장 선정(시장커버리지) 전략 3가지를 쓰시오.", a:"비차별화 · 차별화 · 집중화 마케팅" },
+  { id:"b17", set:"basic", cat:"마케팅믹스", q:"마케팅 4P를 쓰시오.", a:"Product(제품)·Price(가격)·Place(유통)·Promotion(촉진)" },
+  { id:"b18", set:"basic", cat:"마케팅믹스", q:"제품수명주기(PLC) 4단계를 순서대로 쓰시오.", a:"도입기 → 성장기 → 성숙기 → 쇠퇴기" },
+  { id:"b19", set:"basic", cat:"소비자행동", q:"소비자 구매의사결정 5단계를 순서대로 쓰시오.", a:"문제인식 → 정보탐색 → 대안평가 → 구매 → 구매 후 평가" },
+  { id:"b20", set:"basic", cat:"성과관리", q:"서비스 품질 5요소(SERVQUAL)를 쓰시오.", a:"신뢰성·확신성·유형성·공감성·대응성" },
+  { id:"b21", set:"basic", cat:"마케팅믹스", q:"구매심리 모델 AIDA를 순서대로 쓰시오.", a:"Attention(주의) → Interest(관심) → Desire(욕구) → Action(행동)" },
+  { id:"b22", set:"basic", cat:"성과관리", q:"서비스의 4대 특징을 쓰시오.", a:"무형성 · 소멸성 · 이질성(비표준성) · 비분리성(동시성)" },
+  { id:"b23", set:"basic", cat:"고객·데이터", q:"데이터마이닝이란?", a:"축적된 데이터에서 숨은 규칙·패턴을 찾아 의사결정에 활용하는 분석기법" },
+  { id:"b24", set:"basic", cat:"STP·환경", q:"SWOT 분석의 구성을 쓰시오.", a:"강점(S)·약점(W)=내부 / 기회(O)·위협(T)=외부" },
+  { id:"b25", set:"basic", cat:"STP·환경", q:"마케팅 환경분석의 3C를 쓰시오.", a:"Company(자사)·Customer(고객)·Competitor(경쟁사)" },
+
+  /* ── 2023년 1회 ── */
+  { id:"y2301_1",  set:"2023-1", cat:"마케팅믹스", q:"보기 설명에 맞는 제품수명주기 단계를 쓰시오.(도입/성장/성숙/쇠퇴 특징)", a:"도입기·성장기·성숙기·쇠퇴기 (특징에 맞게 매칭)" },
+  { id:"y2301_2",  set:"2023-1", cat:"시장조사", q:"인터넷(온라인) 조사의 단점을 2가지 쓰시오.", a:"표본 편중, 응답자 추적 불가, 중복응답, 관심자만 응답 (중 2가지)" },
+  { id:"y2301_3",  set:"2023-1", cat:"시장조사", q:"전화조사와 집단면접조사의 장단점을 2가지씩 쓰시오.", a:"전화: 저렴·신속 / 상세정보 곤란\n집단면접(FGI): 심층 의견·상호작용 / 비용·시간↑, 진행자 영향" },
+  { id:"y2301_4",  set:"2023-1", cat:"소비자행동", q:"소비자 구매행동에 영향을 주는 심리적 요인 4가지를 쓰시오.", a:"동기 · 지각 · 학습 · 신념(태도)" },
+  { id:"y2301_5",  set:"2023-1", cat:"시장조사", q:"확률표본추출 방법을 모두 고르시오.", a:"단순무작위 · 층화 · 군집 · 계통 추출" },
+  { id:"y2301_6",  set:"2023-1", cat:"소비자행동", q:"소비자 구매의사결정 단계를 순서대로 쓰시오.", a:"문제인식 → 정보탐색 → 대안평가 → 구매 → 구매 후 평가" },
+  { id:"y2301_7",  set:"2023-1", cat:"마케팅믹스", q:"도매상이 제조업자에게 수행하는 기능을 2가지 쓰시오.", a:"시장확대·재고유지·주문처리·시장정보 제공·고객서비스 대행 (중 2가지)" },
+  { id:"y2301_8",  set:"2023-1", cat:"인·아웃바운드", q:"인바운드의 활용분야를 쓰시오.", a:"A/S·클레임 접수, 상담·예약·주문 접수" },
+  { id:"y2301_9",  set:"2023-1", cat:"인·아웃바운드", q:"아웃바운드 기업의 특징을 2가지 쓰시오.", a:"기업 주도형·능동적·목표지향, 명확한 DB 필수, 스크립트 활용도 높음 (중 2가지)" },
+  { id:"y2301_10", set:"2023-1", cat:"시장조사", q:"측정 신뢰성을 향상시키는 방법을 쓰시오.", a:"측정 항목 늘리기, 모호성 제거, 동일 질문 반복, 불성실 응답 제외" },
+  { id:"y2301_11", set:"2023-1", cat:"시장조사", q:"조사설계 시 조사의 종류(목적별)를 쓰시오.", a:"탐색조사 · 기술조사 · 인과조사" },
+  { id:"y2301_12", set:"2023-1", cat:"고객 상담", q:"말이 잘 통하는(우호적) 고객의 상담기법을 3가지 쓰시오.", a:"공감적 경청, 적극적 호응(맞장구), 니즈에 맞춘 명확한 정보 제공" },
+  { id:"y2301_13", set:"2023-1", cat:"시장조사", q:"질문(응답) 형태 3종을 쓰시오.", a:"서술형 · 양자택일형 · 다지선다형" },
+  { id:"y2301_14", set:"2023-1", cat:"STP·환경", q:"마이클 포터의 산업구조분석 5요인을 쓰시오.", a:"기존 경쟁·대체품 위협·구매자 협상력·공급자 협상력·신규진입 위협" },
+  { id:"y2301_15", set:"2023-1", cat:"시장조사", q:"측정 척도를 구분하시오.", a:"명목 · 서열 · 등간 · 비율 척도" },
+  { id:"y2301_16", set:"2023-1", cat:"고객 상담", q:"상담원이 갖추어야 할 자세(경청 시)를 3가지 쓰시오.", a:"비판·평가하지 않기, 가로막지 않기, 편견 없이 집중(공감적 경청)" },
+  { id:"y2301_17", set:"2023-1", cat:"고객·데이터", q:"고객 패턴을 찾아 의사결정에 이용하는 분석기법은?", a:"데이터마이닝" },
+  { id:"y2301_18", set:"2023-1", cat:"성과관리", q:"통화품질과 모니터링의 차이를 2가지 쓰시오.", a:"통화품질: 상담 자체의 품질(상태)\n모니터링: 그 품질을 점검·평가·개선하는 활동" },
+  { id:"y2301_19", set:"2023-1", cat:"마케팅믹스", q:"마케팅 4P를 쓰시오.", a:"Product·Price·Place·Promotion" },
+  { id:"y2301_20", set:"2023-1", cat:"인·아웃바운드", q:"스크립트가 필요한 이유를 2가지 쓰시오.", a:"돌발상황 대처, 서비스 표준화, 생산성·응대능력 향상, 일관성 유지 (중 2가지)" },
+
+  /* ── 2023년 2회 ── */
+  { id:"y2302_1",  set:"2023-2", cat:"시장조사", q:"보기에 맞는 조사법을 쓰시오.", a:"표적집단면접법(FGI) / 서베이" },
+  { id:"y2302_2",  set:"2023-2", cat:"마케팅믹스", q:"구매적 커뮤니케이션의 역할을 3가지 쓰시오.", a:"기업 이미지 제고, 구매 전 위험 감소, 상표 인지 증대" },
+  { id:"y2302_3",  set:"2023-2", cat:"고객·데이터", q:"구매능력은 있으나 구매의사가 불명확한 고객은?", a:"구매 용의자" },
+  { id:"y2302_4",  set:"2023-2", cat:"CRM", q:"CRM 4프로세스를 순서대로 쓰시오.", a:"고객 선별 → 획득 → 개발 → 유지" },
+  { id:"y2302_5",  set:"2023-2", cat:"마케팅믹스", q:"저가격·고가격 정책이 유리한 조건을 쓰시오.", a:"저가격: 가격탄력성↑·생산량↑\n고가격: 가격탄력성↓·경쟁자↓" },
+  { id:"y2302_6",  set:"2023-2", cat:"성과관리", q:"콜 모니터링 방법을 2가지 쓰시오.", a:"Call Taping · Silent · Self · Peer Monitoring (중 2가지)" },
+  { id:"y2302_7",  set:"2023-2", cat:"고객 상담", q:"개방형 질문의 장점을 3가지 쓰시오.", a:"다양한 의견 수렴, 니즈 탐색 가능, 자유로운 응답" },
+  { id:"y2302_8",  set:"2023-2", cat:"CRM", q:"CRM을 통한 기업의 이점을 쓰시오.", a:"서비스 개선·DB 활용, 이탈 방지, 비용 절감, 긍정적 구전, 이직 감소" },
+  { id:"y2302_9",  set:"2023-2", cat:"시장조사", q:"응답자-질문자 상호작용에서 생기는 오류는?", a:"비표본오류 (예: 질문을 이해하지 못함)" },
+  { id:"y2302_10", set:"2023-2", cat:"성과관리", q:"모니터링을 하는 이유를 쓰시오.", a:"통화품질 평가, 스킬 향상, 고객만족, 교육·코칭, 니즈 파악" },
+  { id:"y2302_11", set:"2023-2", cat:"마케팅믹스", q:"산업재 분류 빈칸을 채우시오.", a:"설비품 · 보조장비 · 원자재 · 부품" },
+  { id:"y2302_12", set:"2023-2", cat:"성과관리", q:"상담사 연결까지 소요시간을 관리하는 지표는?", a:"ASA(평균응답속도)" },
+  { id:"y2302_13", set:"2023-2", cat:"시장조사", q:"보기에 맞는 조사를 쓰시오.", a:"전화조사" },
+  { id:"y2302_14", set:"2023-2", cat:"고객 상담", q:"고객 입장에서 기분·감정을 이해하며 듣는 것은?", a:"공감적 경청" },
+  { id:"y2302_15", set:"2023-2", cat:"시장조사", q:"설문지 타당성을 검토하기 위해 본조사 전에 하는 것은?", a:"사전조사(pre-test)" },
+  { id:"y2302_16", set:"2023-2", cat:"고객·데이터", q:"외부고객과 내부고객을 각각 서술하시오.", a:"외부고객: 상품을 구매하는 소비자\n내부고객: 조직 내 직원(동료·타 부서)" },
+  { id:"y2302_17", set:"2023-2", cat:"CRM", q:"RFM의 의미를 쓰시오.", a:"Recency(최근성)·Frequency(빈도)·Monetary(금액)" },
+  { id:"y2302_18", set:"2023-2", cat:"인·아웃바운드", q:"스크립트 작성이 필요한 이유를 3가지 쓰시오.", a:"서비스 표준화, 돌발상황 대처, 일관성 유지, 생산성·응대능력 향상 (중 3가지)" },
+  { id:"y2302_19", set:"2023-2", cat:"마케팅믹스", q:"무점포 판매 방식을 3가지 쓰시오.", a:"전자상거래 · 카탈로그 판매 · 방문판매" },
+  { id:"y2302_20", set:"2023-2", cat:"성과관리", q:"서비스 품질 지표(SERVQUAL) 5요소를 쓰시오.", a:"신뢰성·확신성·유형성·공감성·대응성" },
+  { id:"y2302_21", set:"2023-2", cat:"고객·데이터", q:"보기 설명에 맞는 분석기법은?", a:"데이터마이닝" },
+  { id:"y2302_22", set:"2023-2", cat:"고객·데이터", q:"보유 DB에서 우량고객만 선별 추출하는 작업은?", a:"리스트 스크리닝" },
+  { id:"y2302_23", set:"2023-2", cat:"인·아웃바운드", q:"아웃바운드의 비판매 분야를 2가지 쓰시오.", a:"해피콜 · 여론(만족도)조사" },
+  { id:"y2302_24", set:"2023-2", cat:"CRM", q:"파레토 법칙을 설명하시오.", a:"상위 20% 우량고객이 매출의 80%를 차지한다는 법칙" },
+  { id:"y2302_25", set:"2023-2", cat:"시장조사", q:"보기에 맞는 조사를 쓰시오.", a:"종단조사" },
+
+  /* ── 2024년 1회 (기출 복원 · 이미지 자료) ── */
+  { id:"y2401_1",  set:"2024-1", cat:"시장조사", q:"시장조사의 내·외적 타당성을 저해하는 중요한 외생변수를 4가지 쓰시오.(신유형)", a:"역사(우연적 사건)·성숙효과·시험(검사)효과·선택편향 등 (내적 타당성 저해요인)" },
+  { id:"y2401_2",  set:"2024-1", cat:"인·아웃바운드", q:"텔레마케팅에서 스크립트란 무엇인지 정의하시오.", a:"고객의 원활한 상담을 위해 사전에 잘 짜놓은 대화 대본" },
+  { id:"y2401_3",  set:"2024-1", cat:"조직·성과", q:"콜센터 기획·운영 시 고려사항을 4가지 쓰시오.", a:"주요 대상 고객 데이터 확보·관리방안, 직원 채용·관리방안, 운영 비용관리, 성과 관리방안" },
+  { id:"y2401_4",  set:"2024-1", cat:"CRM", q:"고객생애가치에 영향을 미치는 요소를 4가지 쓰시오.", a:"고객 반응률 · 신뢰도 · 기여도 · 성장성" },
+  { id:"y2401_5",  set:"2024-1", cat:"소비자행동", q:"소비자 구매의사결정 6단계를 보기 순서대로 쓰시오.", a:"구매계획 - 문제인식 - 정보탐색 - 대안평가 - 구매결정 - 구매" },
+  { id:"y2401_6",  set:"2024-1", cat:"시장조사", q:"기술조사의 장점을 2가지 쓰시오.(신유형)", a:"대규모 집단의 특성을 체계적으로 묘사·파악, 결과의 일반화가 용이함" },
+  { id:"y2401_7",  set:"2024-1", cat:"시장조사", q:"2차자료를 이용하는 탐색조사의 종류를 3가지 쓰시오.", a:"전문가의견조사 · 문헌조사 · 사례연구" },
+  { id:"y2401_8",  set:"2024-1", cat:"조직·성과", q:"아이오와(Iowa) 대학 리더십 모형 3가지를 쓰시오.", a:"전제적 · 민주적 · 방임형 리더십 (※ 주도적 리더십은 해당 없음)" },
+  { id:"y2401_9",  set:"2024-1", cat:"조직·성과", q:"피들러 상황적합성이론의 3가지 상황요인을 쓰시오.", a:"리더-구성원 관계 · 과업구조 · 리더의 직위권한 (※ 직무구조는 해당 없음)" },
+  { id:"y2401_11", set:"2024-1", cat:"고객 상담", q:"커뮤니케이션에서 수신자 측 장애요인을 3가지 쓰시오.", a:"선입견·편견, 속단적 평가, 선택적 수용(청취), 반응·피드백 부족 (중 3가지)" },
+  { id:"y2401_12", set:"2024-1", cat:"시장조사", q:"우편조사의 장점을 2가지 쓰시오.", a:"시간·비용 절약, 광범위한 지역 조사 가능, 익명성 보장으로 솔직한 응답" },
+  { id:"y2401_13", set:"2024-1", cat:"마케팅믹스", q:"초기 고가격(스키밍) 전략이 유리한 조건을 4가지 쓰시오.", a:"수요의 가격탄력성 낮음, 규모의 경제 효과 작음, 높은 품질 경쟁력, 시장 경쟁자 수가 적을 것으로 예상" },
+  { id:"y2401_14", set:"2024-1", cat:"조직·성과", q:"텔레마케팅 in-house(자체운영) 전략의 장단점을 1가지씩 쓰시오.", a:"장점: 직원 직접 관리·통제(기밀 보호·노하우 축적)\n단점: 초기 투자비용 많음·시스템 구축 어려움" },
+  { id:"y2401_15", set:"2024-1", cat:"고객불만", q:"화난 고객을 응대하는 기법을 쓰시오.", a:"같이 화내지 않기, Yes-but 화법으로 정중히 사과, 화내는 이야기에 공감하며 경청" },
+  { id:"y2401_16", set:"2024-1", cat:"마케팅믹스", q:"교차판매(cross-selling)를 정의하시오.", a:"고객이 구매한 상품·서비스와 연관된 자사 상품·서비스의 추가구매를 유도하는 판매기법" },
+  { id:"y2401_17", set:"2024-1", cat:"고객 상담", q:"개방형 질문의 장단점을 2가지씩 쓰시오.", a:"장점: 다양한 의견 수렴, 고객 니즈 탐색 용이\n단점: 코딩(정리) 어려움, 응답 부담으로 무응답 빈도 높음" },
+  { id:"y2401_18", set:"2024-1", cat:"고객·데이터", q:"의사결정에 필요한 데이터를 추출·변환·저장하는 것은?(보기)", a:"데이터 웨어하우스" },
+  { id:"y2401_19", set:"2024-1", cat:"CRM", q:"판매사후관리(follow-up)의 중요성을 쓰시오.", a:"고객과의 장기적 관계 유지, 기업 이미지 제고, 제품·서비스 문제 발견·개선, 교차판매 유도" },
+  { id:"y2401_20", set:"2024-1", cat:"STP·환경", q:"재포지셔닝이 필요한 조건을 4가지 쓰시오.", a:"매출 감소(판매 침체), 소비자 취향·욕구 변화, 유망한 새 시장 기회 발견, 경쟁자 진입으로 차별우위 유지 곤란" },
+  { id:"y2401_21", set:"2024-1", cat:"마케팅믹스", q:"제품수명주기를 순서대로 쓰시오.", a:"도입기 - 성장기 - 성숙기 - 쇠퇴기" },
+  { id:"y2401_22", set:"2024-1", cat:"마케팅믹스", q:"Push 전략을 정의하시오.", a:"기업이 중간상·판매원을 대상으로 인센티브 등 프로모션을 펼쳐 소비자에게 직접 구입을 권유하는 적극적 마케팅" },
+  { id:"y2401_23", set:"2024-1", cat:"인·아웃바운드", q:"아웃바운드는 ( )의 활용도가 높다. 빈칸을 채우시오.", a:"스크립트" },
+  { id:"y2401_24", set:"2024-1", cat:"STP·환경", q:"기업 마케팅 환경의 빈칸을 채우시오.", a:"내부환경 · 외부환경" },
+  { id:"y2401_25", set:"2024-1", cat:"인·아웃바운드", q:"스크립트를 작성하는 이유(목적)를 쓰시오.", a:"상담 표준화·일관성 유지, 돌발상황 대처, 생산성·응대능력 향상, 상담 효과 측정" },
+
+  /* ── 2024년 3회 ── */
+  { id:"y2403_1",  set:"2024-3", cat:"마케팅믹스", q:"고객이 구매한 상품과 연관된 다른 상품의 구매를 유도하는 것은?", a:"교차판매(Cross-selling)" },
+  { id:"y2403_2",  set:"2024-3", cat:"인·아웃바운드", q:"스크립트 작성 원칙 10가지 중 4가지를 쓰시오.", a:"활용목적 명확화·간단명료·이해·유연·설득확신·고객중심·상황대응·상황관리·차별성·회화체 (중 4가지)" },
+  { id:"y2403_3",  set:"2024-3", cat:"고객 상담", q:"아웃바운드 판매 시 강조해야 할 것은?", a:"편익(Benefit·니즈)" },
+  { id:"y2403_4",  set:"2024-3", cat:"CRM", q:"고객생애가치(CLV)의 의미를 쓰시오.", a:"한 고객이 거래 전 기간 동안 기업에 제공하는 총 순이익 가치" },
+  { id:"y2403_5",  set:"2024-3", cat:"STP·환경", q:"포지셔닝의 종류를 2가지 쓰시오.", a:"가격·속성/이미지/사용상황/사용자/경쟁제품 포지셔닝 (중 2가지)" },
+  { id:"y2403_6",  set:"2024-3", cat:"인·아웃바운드", q:"인바운드에 활용되는 것은?", a:"불만 접수 및 처리" },
+  { id:"y2403_7",  set:"2024-3", cat:"시장조사", q:"확률표본추출 방법 4가지를 쓰시오.", a:"단순무작위 · 층화 · 군집 · 계통 추출" },
+  { id:"y2403_8",  set:"2024-3", cat:"조직·성과", q:"직무평가 종류 4가지를 쓰시오.", a:"서열법 · 분류법 · 요소비교법 · 점수법" },
+  { id:"y2403_9",  set:"2024-3", cat:"시장조사", q:"우연적 사건과 성숙효과를 설명하시오.(내적 타당성 저해요인)", a:"우연적 사건: 조사 기간 중 발생한 외부 사건이 결과에 영향\n성숙효과: 시간 경과에 따른 응답자 자체의 변화가 결과에 영향" },
+  { id:"y2403_10", set:"2024-3", cat:"시장조사", q:"정량적 조사와 정성적 조사를 정의하시오.", a:"정량적: 수치·통계로 계량화하는 조사\n정성적: 심층면접·FGI 등 비계량적 조사" },
+  { id:"y2403_11", set:"2024-3", cat:"조직·성과", q:"콜센터 인력 산정(Erlang C)에 필요한 항목 4가지를 쓰시오.", a:"평균 통화시간 · 평균 마무리시간 · 예상 인입 콜 수 · 목표 서비스레벨" },
+  { id:"y2403_12", set:"2024-3", cat:"STP·환경", q:"시장세분화의 행동분석적·인구통계적 변수를 3가지씩 쓰시오.", a:"행동분석: 추구편익·사용량·사용경험·상표애호도·구매준비단계\n인구통계: 성별·나이·소득·직업·종교·가족규모" },
+  { id:"y2403_13", set:"2024-3", cat:"STP·환경", q:"BCG 매트릭스에서 성장률↓·점유율↑인 사업은?", a:"현금젖소(Cash Cow)" },
+  { id:"y2403_14", set:"2024-3", cat:"고객·데이터", q:"구매 패턴을 예측해 구매를 강화하는 마케팅은?", a:"데이터베이스(DB) 마케팅" },
+  { id:"y2403_15", set:"2024-3", cat:"성과관리", q:"효과적인 목표설정 원칙(SMART) 중 3가지를 쓰시오.", a:"구체적·측정가능·달성가능·결과지향·기한명확 (중 3가지)" },
+  { id:"y2403_16", set:"2024-3", cat:"STP·환경", q:"목표시장 내 전략적 위치 계획은? 차별우위 유지 곤란 시에는?", a:"포지셔닝 / (곤란 시) 재포지셔닝" },
+  { id:"y2403_17", set:"2024-3", cat:"마케팅믹스", q:"마케팅 기법의 발전 단계를 쓰시오.", a:"제품 → 직접 → 표적 → DB → 고객관계 마케팅" },
+  { id:"y2403_18", set:"2024-3", cat:"시장조사", q:"전화조사의 장단점을 2가지씩 쓰시오.", a:"장점: 저렴·신속\n단점: 상세정보 곤란·시각자료 제시 불가" },
+  { id:"y2403_19", set:"2024-3", cat:"조직·성과", q:"매슬로 욕구 5단계를 순서대로 쓰시오.", a:"생리 → 안전(안정) → 사회(소속) → 존경 → 자아실현" },
+  { id:"y2403_20", set:"2024-3", cat:"성과관리", q:"SERVQUAL 5요소를 쓰시오.", a:"신뢰성·확신성·유형성·공감성·대응성" },
+  { id:"y2403_21", set:"2024-3", cat:"마케팅믹스", q:"판매촉진(구매 커뮤니케이션)의 효과를 쓰시오.", a:"지각된 위험 감소, 구매 가능성 증대, 상품 자산 구축, 긍정적 구전" },
+  { id:"y2403_22", set:"2024-3", cat:"인·아웃바운드", q:"인바운드 상담 순서를 쓰시오.", a:"첫인사·소개 → 니즈 파악 → 정보제공·해결 → 동의·확인 → 종결" },
+  { id:"y2403_23", set:"2024-3", cat:"시장조사", q:"설문지 작성 시 고려사항을 3가지 쓰시오.", a:"명확·간결하게, 유도성 질문 회피, 논리적 순서·응답 부담 최소화" },
+  { id:"y2403_24", set:"2024-3", cat:"시장조사", q:"설문지 질문 배열방법을 3가지 쓰시오.", a:"쉬운→어려운, 일반→특수, 개방형→폐쇄형(민감 질문은 뒤로)" },
+  { id:"y2403_25", set:"2024-3", cat:"STP·환경", q:"3C의 빈칸을 채우시오.", a:"Customer(고객) [Company·Competitor와 함께]" },
+
+  /* ── 2025년 1회 ── */
+  { id:"y2501_1",  set:"2025-1", cat:"인·아웃바운드", q:"아웃바운드 텔레마케팅의 특징을 쓰시오.", a:"기업 주도형·능동적·목표지향, 명확한 DB 기반, 스크립트 활용도 높음" },
+  { id:"y2501_2",  set:"2025-1", cat:"소비자행동", q:"Big Five(성격 5요인)를 쓰시오.", a:"외향성 · 친화성 · 성실성 · 개방성 · 신경증" },
+  { id:"y2501_3",  set:"2025-1", cat:"시장조사", q:"전화조사의 장단점을 쓰시오.", a:"장점: 저렴·신속·응답률↑\n단점: 상세정보 곤란, 시각자료 제시 불가" },
+  { id:"y2501_4",  set:"2025-1", cat:"고객·데이터", q:"고객 유형별 예상 질문·답변을 정리한 문답집은?", a:"Q&A 시트" },
+  { id:"y2501_5",  set:"2025-1", cat:"성과관리", q:"발신 대비 반응 비율을 구하는 계산문제(반응률/응답률)의 답은?", a:"2% (= 반응수 ÷ 발신수 × 100)" },
+  { id:"y2501_6",  set:"2025-1", cat:"조직·성과", q:"비전 제시로 구성원을 변화시키는 리더십은?", a:"변혁적 리더십" },
+  { id:"y2501_7",  set:"2025-1", cat:"CRM", q:"RFM 분석을 정의하시오.", a:"최근성·구매빈도·구매금액으로 고객 가치를 등급화하는 기법" },
+  { id:"y2501_8",  set:"2025-1", cat:"CRM", q:"데이터 분석·예측 중심의 CRM 유형은?", a:"분석적 CRM" },
+  { id:"y2501_9",  set:"2025-1", cat:"시장조사", q:"소개·연쇄로 표본을 확대하는 비확률 표본추출은?", a:"눈덩이 표본추출" },
+  { id:"y2501_10", set:"2025-1", cat:"시장조사", q:"정성조사와 정량조사를 설명하시오.", a:"정성: 심층면접·FGI 등 질적 조사\n정량: 수치로 계량화하는 조사" },
+  { id:"y2501_11", set:"2025-1", cat:"시장조사", q:"1차자료와 2차자료를 설명하시오.", a:"1차: 직접 조사·수집한 자료\n2차: 기존에 만들어진 자료" },
+  { id:"y2501_12", set:"2025-1", cat:"마케팅믹스", q:"제품수명주기를 순서대로 쓰시오.", a:"도입 - 성장 - 성숙 - 쇠퇴" },
+  { id:"y2501_13", set:"2025-1", cat:"인·아웃바운드", q:"인바운드 상담 절차를 순서대로 쓰시오.", a:"상담준비 - 첫인사 - 니즈파악 - 해결방안 제시 - 동의 및 재확인 - 종결" },
+  { id:"y2501_14", set:"2025-1", cat:"인·아웃바운드", q:"통화 연결 시 안내 내용·조치사항을 쓰시오.", a:"대기·연결 지연 양해 안내, 보류 시 양해 구하기, 필요 시 콜백 안내" },
+  { id:"y2501_15", set:"2025-1", cat:"STP·환경", q:"한두 세분시장에 자원을 집중하는 마케팅 전략은?", a:"집중화 마케팅" },
+  { id:"y2501_16", set:"2025-1", cat:"STP·환경", q:"STP 순서의 빈칸을 채우시오.", a:"시장세분화 → (목표시장 선정) → 포지셔닝" },
+  { id:"y2501_17", set:"2025-1", cat:"STP·환경", q:"인구통계학적 세분화 변수를 2개 쓰시오.", a:"나이·성별·직업·소득·종교 (중 2개)" },
+  { id:"y2501_18", set:"2025-1", cat:"시장조사", q:"설문지 질문 순서를 정할 때 고려사항을 2개 쓰시오.", a:"쉬운 질문 먼저, 민감·인구통계 질문은 뒤로, 논리적 흐름 유지 (중 2개)" },
+  { id:"y2501_19", set:"2025-1", cat:"시장조사", q:"답을 특정 방향으로 이끄는(분리수거 지문) 질문은?", a:"유도성 질문 (가치중립 원칙 위배)" },
+  { id:"y2501_20", set:"2025-1", cat:"마케팅믹스", q:"구매 상품과 연관된 상품 추가 구매를 유도하는 것은?(대체품 지문)", a:"교차판매" },
+  { id:"y2501_21", set:"2025-1", cat:"고객·데이터", q:"반복 구매하고 이탈하지 않으며 추천하는 고객은?", a:"충성(핵심)고객" },
+  { id:"y2501_22", set:"2025-1", cat:"마케팅믹스", q:"가격을 정하는 가격결정법의 기준(유형)을 쓰시오.", a:"원가(가산)기반 · 수요(가치)기반 · 경쟁기반 가격결정법" },
+  { id:"y2501_23", set:"2025-1", cat:"고객·데이터", q:"웹사이트 접속·클릭 기록을 분석하는 기법은?(보기)", a:"로그 분석" },
+  { id:"y2501_24", set:"2025-1", cat:"STP·환경", q:"부서간 이기주의·관료주의·경직성은 무엇의 장애요인인가?", a:"CRM(내부환경) 도입·운영의 장애요인" },
+  { id:"y2501_25", set:"2025-1", cat:"소비자행동", q:"구매의사결정 과정을 순서대로 쓰시오.", a:"문제인식 - 정보탐색 - 대안의 평가 - 구매 - 구매 후 평가" },
+
+  /* ── 2025년 2회 ── */
+  { id:"y2502_1",  set:"2025-2", cat:"시장조사", q:"패널조사의 장점을 2가지 쓰시오.", a:"변화 추적 가능, 비용·시간 절감" },
+  { id:"y2502_2",  set:"2025-2", cat:"고객 상담", q:"커뮤니케이션 장애요인을 3가지 쓰시오.", a:"물리적 · 심리적 · 의미적 (· 기술적) 요인" },
+  { id:"y2502_3",  set:"2025-2", cat:"인·아웃바운드", q:"스크립트 작성이 필요한 요인을 2가지 쓰시오.", a:"서비스 표준화, 돌발상황 대처, 일관성 유지, 생산성 향상 (중 2가지)" },
+  { id:"y2502_4",  set:"2025-2", cat:"STP·환경", q:"시장세분화 기준 변수를 3가지 쓰시오.", a:"인구통계·지리·심리분석·행동분석 (중 3가지)" },
+  { id:"y2502_5",  set:"2025-2", cat:"고객·데이터", q:"고객충성도의 유형 2가지를 쓰시오.", a:"행동적 충성도 · 태도적 충성도" },
+  { id:"y2502_6",  set:"2025-2", cat:"고객 상담", q:"고객응대관계의 특징을 3가지 쓰시오.", a:"쌍방향 · 비대면 · DB 활용" },
+  { id:"y2502_7",  set:"2025-2", cat:"마케팅믹스", q:"소비재(편의/선매/전문품)의 특성을 비교하시오.", a:"편의품: 자주·쉽게 구매 / 선매품: 비교 후 구매 / 전문품: 상표 집착" },
+  { id:"y2502_8",  set:"2025-2", cat:"CRM", q:"CRM 비전의 필수요소 4가지를 쓰시오.", a:"고객 중심 · 장기적 관계 · 상호 이익 · 통합 관리" },
+  { id:"y2502_9",  set:"2025-2", cat:"시장조사", q:"탐색조사의 방법을 3가지 쓰시오.", a:"전문가의견조사 · 문헌조사 · 사례연구" },
+  { id:"y2502_10", set:"2025-2", cat:"STP·환경", q:"BCG 매트릭스에 사업 위치를 넣으시오.", a:"별 · 물음표 · 현금젖소 · 개" },
+  { id:"y2502_11", set:"2025-2", cat:"조직·성과", q:"커크패트릭 교육훈련 평가의 1단계는?", a:"반응 평가 (반응→학습→행동→결과)" },
+  { id:"y2502_12", set:"2025-2", cat:"시장조사", q:"광범위한 모집단을 다수 변수로 조사하는 유형은?", a:"기술조사" },
+  { id:"y2502_13", set:"2025-2", cat:"인·아웃바운드", q:"마구잡이로 거는 냉담 통화는?", a:"콜드콜(Junk Call)" },
+  { id:"y2502_14", set:"2025-2", cat:"인·아웃바운드", q:"인바운드 고객응대 유의사항을 3가지 쓰시오.", a:"정확·신속 응대, 경청과 공감, 표준화법 준수, 끝까지 책임, 고객정보 보호 (중 3가지)" },
+  { id:"y2502_15", set:"2025-2", cat:"마케팅믹스", q:"성숙기의 특성을 설명하시오.", a:"판매 정점 후 둔화, 경쟁 치열, 방어적 가격, 상표 재활성화" },
+  { id:"y2502_16", set:"2025-2", cat:"마케팅믹스", q:"VMS의 통합 순서를 쓰시오.", a:"관리형 → 계약형 → 기업형" },
+  { id:"y2502_17", set:"2025-2", cat:"고객·데이터", q:"비정형 텍스트 자료에서 의미를 추출하는 ( )마이닝은?", a:"텍스트 마이닝" },
+  { id:"y2502_18", set:"2025-2", cat:"시장조사", q:"층화표본추출을 설명하고 종류 2가지를 쓰시오.", a:"모집단을 특성별 층으로 나눠 각 층에서 무작위 추출 / 비례·불비례 층화추출" },
+  { id:"y2502_19", set:"2025-2", cat:"시장조사", q:"측정 척도의 빈칸을 채우시오.", a:"명목 · 서열 · 등간 · 비율" },
+  { id:"y2502_20", set:"2025-2", cat:"인·아웃바운드", q:"아웃바운드 판매 스크립트 단계를 쓰시오.", a:"도입 → 탐색 → 해석·요약 → 특징·혜택 제시 → 접근 시도 → 접근 계약 → 확신·보증 → 연결판매" },
+  { id:"y2502_21", set:"2025-2", cat:"마케팅믹스", q:"보기에 맞는 유통전략은?", a:"개방적(집약적) 유통경로" },
+  { id:"y2502_22", set:"2025-2", cat:"인·아웃바운드", q:"아웃바운드를 활용한 시장조사의 목적을 쓰시오.", a:"고객 만족도·욕구 파악, 신제품 반응 조사, 시장·경쟁 동향 파악, 잠재수요 발굴" },
+  { id:"y2502_23", set:"2025-2", cat:"시장조사", q:"설문지 사전조사의 의미를 쓰시오.", a:"본조사 전에 설문의 문제점·타당성을 점검하는 간이 조사" },
+  { id:"y2502_24", set:"2025-2", cat:"성과관리", q:"모니터링이 필요한 이유를 3가지 쓰시오.", a:"통화품질 평가, 스킬 향상·코칭, 고객만족·니즈 파악 (중 3가지)" },
+  { id:"y2502_25", set:"2025-2", cat:"CRM", q:"CRM 프로세스 4단계를 쓰시오.", a:"선별 → 획득 → 개발 → 유지" },
+
+  /* ── 2025년 3회 ── */
+  { id:"y2503_1",  set:"2025-3", cat:"마케팅믹스", q:"개인 웹사이트(인터넷) 마케팅 전략을 5가지 쓰시오.(신유형)", a:"검색엔진최적화(SEO), 콘텐츠 마케팅, 이메일 마케팅, SNS·소셜미디어, 제휴 마케팅" },
+  { id:"y2503_2",  set:"2025-3", cat:"시장조사", q:"전화조사의 장점을 3가지 쓰시오.", a:"저렴, 신속, 응답률 높음, 광범위 접촉, 조사자 통제 가능 (중 3가지)" },
+  { id:"y2503_3",  set:"2025-3", cat:"고객 상담", q:"개방형·폐쇄형 질문의 장점을 2가지씩 쓰시오.", a:"개방형: 다양한 의견·심층 정보\n폐쇄형: 응답·집계 용이, 비교 쉬움" },
+  { id:"y2503_4",  set:"2025-3", cat:"고객·데이터", q:"고객 충성도를 높이는 방법을 3가지 쓰시오.", a:"포인트·마일리지, 등급별 혜택 차등, 커뮤니티·이벤트, 만족도 관리 (중 3가지)" },
+  { id:"y2503_5",  set:"2025-3", cat:"고객·데이터", q:"의사결정 지원용으로 통합·축적한 대규모 데이터 저장소는?(보기)", a:"데이터 웨어하우스" },
+  { id:"y2503_6",  set:"2025-3", cat:"소비자행동", q:"여러 대안을 비교·평가하는 구매단계는?(보기)", a:"대안평가" },
+  { id:"y2503_7",  set:"2025-3", cat:"마케팅믹스", q:"소비재와 산업재의 설명 빈칸을 채우시오.(신유형)", a:"소비재: 최종소비자가 사용 / 산업재: 생산·재판매를 위해 구매" },
+  { id:"y2503_8",  set:"2025-3", cat:"STP·환경", q:"비슷한 욕구의 고객을 동질 집단으로 나누는 전략은?", a:"시장세분화" },
+  { id:"y2503_9",  set:"2025-3", cat:"마케팅믹스", q:"소비자 관점의 4C를 쓰시오.", a:"Customer(고객가치)·Cost(비용)·Convenience(편의)·Communication(소통)" },
+  { id:"y2503_10", set:"2025-3", cat:"고객 상담", q:"인바운드 상담사가 경청하기 어려운 경우를 쓰시오.", a:"선입견·편견을 갖고 들을 때, 미리 속단·평가할 때, 선택적으로 들을 때, 주변 소음이 있을 때" },
+  { id:"y2503_11", set:"2025-3", cat:"마케팅믹스", q:"성장기의 특성을 3가지 쓰시오.", a:"판매·이익 급증, 경쟁자 증가, 브랜드 선호 형성, 침투가격 활용 (중 3가지)" },
+  { id:"y2503_12", set:"2025-3", cat:"조직·성과", q:"인사평가 요소(업적/역량/성과/태도) 중 2개를 고르시오.", a:"업적(성과)·역량·태도 중 2개" },
+  { id:"y2503_13", set:"2025-3", cat:"CRM", q:"보기 설명에 맞는 분석은?", a:"RFM 분석" },
+  { id:"y2503_14", set:"2025-3", cat:"시장조사", q:"우편조사의 장단점을 2가지 쓰시오.", a:"장점: 저렴·광범위·익명성 / 단점: 응답률 낮음·회수 지연·무자격 응답 통제 불가" },
+  { id:"y2503_15", set:"2025-3", cat:"고객·데이터", q:"잠재/신규/기존/핵심/이탈 고객을 설명하시오.", a:"고객 생애주기에 따른 분류(가망→신규→기존→핵심(충성)→이탈)" },
+  { id:"y2503_16", set:"2025-3", cat:"성과관리", q:"고객 서비스평가 지표(SERVQUAL) 5개를 쓰시오.", a:"대응성·확신성·유형성·공감성·신뢰성" },
+  { id:"y2503_17", set:"2025-3", cat:"STP·환경", q:"포지셔닝의 종류를 3가지 쓰시오.(신유형)", a:"가격·속성/이미지/사용상황/사용자/경쟁제품 (중 3가지)" },
+  { id:"y2503_18", set:"2025-3", cat:"조직·성과", q:"콜센터 업무 증가 시 조치를 3가지 쓰시오.", a:"인·아웃 인원 조정, 초과근무·교대 운영, 스크립트·시스템 효율화" },
+  { id:"y2503_19", set:"2025-3", cat:"조직·성과", q:"상담원 교육 설계 순서의 빈칸을 채우시오.", a:"요구분석·도입 → 설계 → (개발) → 실행 → 평가" },
+  { id:"y2503_20", set:"2025-3", cat:"마케팅믹스", q:"AIDA 중 A·I·A를 쓰시오.", a:"Attention(주의)·Interest(관심)·Action(행동)" },
+  { id:"y2503_21", set:"2025-3", cat:"마케팅믹스", q:"편의품·선매품·전문품을 구분하시오.", a:"편의품: 자주·쉽게 구매 / 선매품: 비교 후 구매 / 전문품: 상표 집착" },
+  { id:"y2503_22", set:"2025-3", cat:"시장조사", q:"타당도의 종류를 2가지 채우시오.(신유형)", a:"내용타당도·기준타당도·개념(구성)타당도 (중 2가지)" },
+  { id:"y2503_23", set:"2025-3", cat:"시장조사", q:"보기 설명에 맞는 조사는?", a:"표적집단면접법(FGI)" },
+  { id:"y2503_24", set:"2025-3", cat:"마케팅믹스", q:"중간상 개입을 정당화하는 유통 원칙은?", a:"총거래 수 최소화의 원칙" },
+
+  /* ── 2026년 1회 ── */
+  { id:"y2601_1",  set:"2026-1", cat:"인·아웃바운드", q:"인바운드 텔레마케팅의 활용분야를 쓰시오.", a:"상품 주문·예약·문의 접수, A/S·클레임 처리, 신고·분실 접수" },
+  { id:"y2601_2",  set:"2026-1", cat:"조직·성과", q:"변혁적 리더십의 정의와 구성요소를 쓰시오.", a:"정의: 비전 제시로 구성원의 가치·태도를 변화시켜 기대 이상의 성과를 끌어내는 리더십\n구성요소: 카리스마(이상적 영향력)·영감적 동기부여·지적 자극·개별적 배려" },
+  { id:"y2601_3",  set:"2026-1", cat:"시장조사", q:"좋은 측정도구(척도)가 갖추어야 할 조건을 쓰시오.", a:"타당성 · 신뢰성 · 수용성 · 실용성" },
+  { id:"y2601_4",  set:"2026-1", cat:"고객·데이터", q:"충성고객의 특징을 쓰시오.", a:"지속·반복 구매, 경쟁사 유혹에 쉽게 이탈하지 않음, 주변에 적극 추천(간접 광고 효과)" },
+  { id:"y2601_5",  set:"2026-1", cat:"고객 상담", q:"질문기법 중 프로빙과 래더링을 설명하시오.", a:"프로빙: 응답이 불충분할 때 명확한 답을 얻으려 계속 캐묻는 기법\n래더링: 속성-편익-가치의 계층 연결로 핵심 니즈를 파악하는 기법" },
+  { id:"y2601_6",  set:"2026-1", cat:"조직·성과", q:"상담사 재택근무의 장점을 2가지 쓰시오.", a:"시간·교통비 절약, 사무공간·설비비 절감, 우수 인력 유인, 업무 유연성 (중 2가지)" },
+  { id:"y2601_7",  set:"2026-1", cat:"CRM", q:"CRM에서 시장점유율보다 더 중요하게 여기는 것은?", a:"고객점유율(고객만족도)" },
+  { id:"y2601_8",  set:"2026-1", cat:"STP·환경", q:"시장개척자(선발기업)가 후발진입기업에 비해 갖는 장점을 3가지 쓰시오.", a:"진입장벽 구축, 브랜드 인지·선호 선점, 경험효과 원가우위, 유통·자원 선점, 전환비용 형성 (중 3가지)" },
+  { id:"y2601_9",  set:"2026-1", cat:"고객 상담", q:"고객만족 서비스가 중요한 이유를 2가지 쓰시오.", a:"재구매·고객 유지로 수익 증대, 긍정적 구전·이미지 향상, 신규 획득보다 낮은 유지 비용 (중 2가지)" },
+  { id:"y2601_10", set:"2026-1", cat:"STP·환경", q:"비슷한 욕구의 고객을 동질 집단으로 구별·묶는 활동은?", a:"시장세분화" },
+  { id:"y2601_11", set:"2026-1", cat:"고객·데이터", q:"기존 고객 리스트에서 가망(우량)고객을 선별하는 작업은?", a:"리스트 스크리닝" },
+  { id:"y2601_12", set:"2026-1", cat:"시장조사", q:"설문지 작성을 마친 뒤 본조사 전에 해야 하는 것은?", a:"사전조사(pre-test)" },
+  { id:"y2601_13", set:"2026-1", cat:"STP·환경", q:"마케팅 환경분석의 3C를 쓰시오.", a:"Company(자사)·Customer(고객)·Competitor(경쟁사)" },
+  { id:"y2601_14", set:"2026-1", cat:"소비자행동", q:"구매자 결정단계 중 빈칸을 채우시오.", a:"대안평가" },
+  { id:"y2601_15", set:"2026-1", cat:"CRM", q:"CRM이 텔레마케터(기업)에게 주는 혜택을 쓰시오.", a:"고객 유지·이탈 방지, 교차·상향 판매 확대, 마케팅·운영 비용 절감, 충성도·수익성 향상" },
+  { id:"y2601_16", set:"2026-1", cat:"시장조사", q:"의사소통(접촉) 방식에 따른 조사법을 쓰시오.", a:"전화조사 · 면접조사 · 우편조사 (· 온라인조사)" },
+  { id:"y2601_17", set:"2026-1", cat:"시장조사", q:"설문지 질문 배치(순서) 시 고려사항을 쓰시오.", a:"쉽고 흥미로운 질문 먼저, 개방형→폐쇄형, 민감·인구통계 질문은 뒤로" },
+  { id:"y2601_18", set:"2026-1", cat:"인·아웃바운드", q:"거래 없던 고객에게 일방적으로 거는 통화는?", a:"콜드콜(Cold Call)" },
+  { id:"y2601_19", set:"2026-1", cat:"조직·성과", q:"종업원 교육훈련의 목적을 2가지 쓰시오.", a:"직무능력 향상, 서비스 품질·생산성 향상, 동기부여·이직 감소, 조직 적응 (중 2가지)" },
+  { id:"y2601_20", set:"2026-1", cat:"STP·환경", q:"내·외부 환경을 강점·약점·기회·위협으로 분석하는 기법은?", a:"SWOT 분석" },
+  { id:"y2601_21", set:"2026-1", cat:"고객 상담", q:"의사소통의 분류 3가지(기준)를 쓰시오.", a:"언어적/비언어적 · 수직적/수평적 · 공식적/비공식적" },
+  { id:"y2601_22", set:"2026-1", cat:"인·아웃바운드", q:"아웃바운드 텔레마케팅의 전개 순서를 쓰시오.", a:"데이터 수집·분석 → 통화 준비·시도 → 통화(상담) → 데이터 처리 → 종결·사후관리" },
+  { id:"y2601_23", set:"2026-1", cat:"STP·환경", q:"표적시장 선정 전략 3가지를 쓰시오.", a:"비차별화 · 차별화 · 집중화 마케팅" },
+  { id:"y2601_24", set:"2026-1", cat:"CRM", q:"CRM 발전 4단계 중 시스템을 구축하고 기업전략 중심으로 관리하는 단계는?", a:"확산기 (준비 → 도입 → 확산 → 통합)" },
+  { id:"y2601_25", set:"2026-1", cat:"CRM", q:"고객을 분석해 특정 표적집단에 마케팅을 집중하는 활동은?", a:"타깃마케팅(타게팅)" },
+];
+
+/* 문제 세트 메타 (UI 구성용) */
+const QUIZ_YEARS: { year: string; rounds: { key: string; label: string }[] }[] = [
+  { year: "2023", rounds: [ { key:"2023-1", label:"1회" }, { key:"2023-2", label:"2회" } ] },
+  { year: "2024", rounds: [ { key:"2024-1", label:"1회" }, { key:"2024-3", label:"3회" } ] },
+  { year: "2025", rounds: [ { key:"2025-1", label:"1회" }, { key:"2025-2", label:"2회" }, { key:"2025-3", label:"3회" } ] },
+  { year: "2026", rounds: [ { key:"2026-1", label:"1회" } ] },
+];
+
+/* ============================ 암기 데이터 (두문자 제외) ============================ */
+const COMPARES: Compare[] = [
+  { title:"인바운드 vs 아웃바운드", l:["인바운드","고객 주도 · Q&A 활용"], r:["아웃바운드","기업 주도 · 스크립트 활용"] },
+  { title:"시장점유율 vs 고객점유율", l:["시장점유율","제품 쓰는 고객 비율(획득)"], r:["고객점유율","한 고객 중 자사 비중(유지·관계)"] },
+  { title:"1차자료 vs 2차자료", l:["1차자료","직접 조사·수집"], r:["2차자료","기존에 작성된 자료"] },
+  { title:"리스트 스크리닝 vs 클리닝", l:["스크리닝","우량고객 선별 추출"], r:["클리닝","오래된·반송 자료 갱신"] },
+  { title:"사전조사 vs 예비조사", l:["사전조사","본조사 전 설문 점검"], r:["예비조사","현장·표본 기초지식 습득"] },
+  { title:"종단조사 vs 횡단조사", l:["종단조사","동일 표본 시간차 반복"], r:["횡단조사","한 시점 1회 조사"] },
+  { title:"타당성 vs 신뢰성", l:["타당성","정확히 측정했는가"], r:["신뢰성","일관되게 측정되는가"] },
+  { title:"등간척도 vs 비율척도", l:["등간","절대영점 없음(온도)"], r:["비율","절대영점 있음(소득)"] },
+  { title:"표본오류 vs 비표본오류", l:["표본오류","표본이 모집단 대표 못함"], r:["비표본오류","측정·입력·이해 과정 오차"] },
+  { title:"불만 vs 클레임", l:["불만(Complain)","기대-결과 차이·하자 등"], r:["클레임(Claim)","소통 부족·지나친 기대"] },
+  { title:"거래적 vs 변혁적 리더십", l:["거래적","보상·교환, 현상 유지"], r:["변혁적","비전·동기부여로 변화"] },
+  { title:"성장기 vs 성숙기", l:["성장기","점유율 확대·침투가격"], r:["성숙기","점유율 방어·방어적 가격"] },
+  { title:"푸시 vs 풀 전략", l:["Push","중간상 통해 직접 권유"], r:["Pull","광고로 소비자가 찾게"] },
+  { title:"교차판매 vs 업셀링", l:["교차판매","연관 상품 추가 구매"], r:["업셀링","더 비싼 상품으로 유도"] },
+];
+const SEQUENCES: Sequence[] = [
+  { title:"아웃바운드 전개 순서 ★", steps:["데이터 수집·분석","통화 준비·시도","통화(상담)","데이터 처리","종결·사후관리"] },
+  { title:"아웃바운드 판매 스크립트 8단계", steps:["도입","탐색","해석·요약","특징·혜택 제시","접근 시도","접근 계약","확신·보증","연결판매"] },
+  { title:"인바운드 상담 절차", steps:["상담 준비","첫인사·소개","니즈 파악","해결방안 제시","동의·재확인","종결"] },
+  { title:"CRM 프로세스", steps:["선별","획득","개발","유지"] },
+  { title:"CRM 발전 4단계", steps:["준비","도입","확산","통합"] },
+  { title:"소비자 구매의사결정 ★", steps:["문제인식","정보탐색","대안평가","구매","구매 후 평가"] },
+  { title:"제품수명주기(PLC)", steps:["도입기","성장기","성숙기","쇠퇴기"] },
+  { title:"불만 해결 4단계", steps:["수집","분석","해결방안 마련","해결과정 점검"] },
+  { title:"성과관리 4단계", steps:["목표 설정","성과 평가","보상","모니터링"] },
+  { title:"커크패트릭 교육평가", steps:["반응","학습","행동","결과"] },
+  { title:"교육 설계 순서", steps:["요구분석·도입","설계","개발","실행","평가"] },
+  { title:"STP 전략", steps:["시장세분화","표적시장 선정","포지셔닝"] },
+  { title:"매슬로 욕구 5단계", steps:["생리","안전","사회(소속)","존경","자아실현"] },
+  { title:"척도 4종(약→강)", steps:["명목","서열","등간","비율"] },
+  { title:"VMS 통합도(약→강)", steps:["관리형","계약형","기업형"] },
+];
+const ABBREV: AbbrCard[] = [
+  { f:"AIDA", b:"Attention 주의·Interest 관심·Desire 욕구·Action 행동" },
+  { f:"AIDMA", b:"주의·관심·욕구·기억(Memory)·행동 — 오프라인 구매심리" },
+  { f:"RFM", b:"Recency 최근성·Frequency 빈도·Monetary 금액" },
+  { f:"CRM", b:"Customer Relationship Management — 고객관계관리" },
+  { f:"LTV / CLV", b:"Life Time Value — 고객생애가치" },
+  { f:"VOC", b:"Voice Of Customer — 고객의 소리" },
+  { f:"MOT", b:"Moment Of Truth — 진실의 순간(약 15초)" },
+  { f:"SPIN", b:"Situation·Problem·Implication·Need-payoff 질문" },
+  { f:"FAB", b:"Feature 특징·Advantage 장점·Benefit 이점" },
+  { f:"SWOT", b:"Strengths·Weaknesses·Opportunities·Threats" },
+  { f:"3C", b:"Company 자사·Customer 고객·Competitor 경쟁사" },
+  { f:"4P", b:"Product·Price·Place·Promotion" },
+  { f:"4C", b:"Customer·Cost·Convenience·Communication" },
+  { f:"STP", b:"Segmentation·Targeting·Positioning" },
+  { f:"BCG", b:"별·물음표·현금젖소(Cash Cow)·개(Dog)" },
+  { f:"PLC", b:"Product Life Cycle — 도입·성장·성숙·쇠퇴" },
+  { f:"SERVQUAL", b:"RATER — 신뢰성·확신성·유형성·공감성·대응성" },
+  { f:"ACD", b:"Automatic Call Distributor — 자동호 분배" },
+  { f:"IVR", b:"Interactive Voice Response — 자동응답 시스템" },
+  { f:"ASA", b:"Average Speed of Answer — 평균응답속도" },
+  { f:"AIO", b:"Activity·Interest·Opinion — 라이프스타일 분석" },
+];
+
+/* ============================ 유틸 ============================ */
+function load<T>(key: string, fallback: T): T {
+  try {
+    const r = window.localStorage.getItem(NS + key);
+    return r !== null ? (JSON.parse(r) as T) : fallback;
+  } catch (e) { return fallback; }
+}
+function save<T>(key: string, val: T): void {
+  try { window.localStorage.setItem(NS + key, JSON.stringify(val)); } catch (e) {}
+}
+function calcDday(examStr: string): number { return Math.ceil((parseExam(examStr).getTime() - Date.now()) / 86400000); }
+function shuffle<T>(a: T[]): T[] {
+  const b = [...a];
+  for (let i = b.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [b[i], b[j]] = [b[j], b[i]];
+  }
+  return b;
+}
+
+function RichText({ text }: { text: string }): JSX.Element {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return <>{parts.map((p, i) => p.startsWith("**") && p.endsWith("**")
+    ? <b key={i}>{p.slice(2, -2)}</b>
+    : <React.Fragment key={i}>{p}</React.Fragment>)}</>;
+}
+
+function Icon({ name, size = 22 }: { name: string; size?: number }): JSX.Element | null {
+  const p = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor",
+    strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  if (name === "home") return <svg {...p}><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>;
+  if (name === "book") return <svg {...p}><path d="M4 5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2z"/><path d="M9 3v18"/></svg>;
+  if (name === "quiz") return <svg {...p}><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>;
+  if (name === "memo") return <svg {...p}><rect x="3" y="4" width="14" height="16" rx="2"/><path d="M7 20l4-2 6 2V8a2 2 0 0 0-2-2h-2"/></svg>;
+  if (name === "wrong") return <svg {...p}><path d="M5 3v18l4-3 4 3V3"/><path d="M16 6l5 5M21 6l-5 5"/></svg>;
+  if (name === "note") return <svg {...p}><path d="M4 4h12l4 4v12H4z"/><path d="M8 11h8M8 15h6"/></svg>;
+  if (name === "gear") return <svg {...p}><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>;
+  if (name === "back") return <svg {...p}><path d="M15 18l-6-6 6-6"/></svg>;
+  if (name === "sun") return <svg {...p}><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>;
+  if (name === "moon") return <svg {...p}><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>;
+  return null;
+}
+
+/* 학습자별 워터마크 오버레이 (상시 노출 · 무단 유포 방지) */
+function Watermark({ name, theme }: { name: string; theme: Theme }): JSX.Element {
+  const fill = theme === "dark" ? "#EDE3D2" : "#37322A";
+  const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='340' height='190'>" +
+    "<text x='12' y='110' transform='rotate(-22 170 95)' font-family='sans-serif' font-size='15' fill='" +
+    fill + "'>인증회원 " + name + "</text></svg>";
+  const url = "data:image/svg+xml," + encodeURIComponent(svg);
+  return <div className="wm-overlay" aria-hidden="true" style={{ backgroundImage: "url(\"" + url + "\")" }}/>;
+}
+
+/* ============================ 앱 본체 ============================ */
+type Tab = "home" | "summary" | "quiz" | "memo" | "wrong" | "note";
+interface Stats { correct: number; wrong: number; solved: number; rate: number; total: number; }
+
+function App(): JSX.Element {
+  const [theme, setTheme] = useState<Theme>(() => load<Theme>("theme", "light"));
+  const [agreed, setAgreed] = useState<boolean>(() => load<boolean>("agreed", false));
+  const [tab, setTab] = useState<Tab>("home");
+  const [progress, setProgress] = useState<Progress>(() => load<Progress>("progress", { quiz: {}, lastVisit: null }));
+  const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [examDate, setExamDate] = useState<string>(() => {
+    const v = load<string>("examDate", EXAM_DEFAULT);
+    return EXAM_OPTIONS.some(o => o.v === v) ? v : EXAM_DEFAULT;
+  });
+
+  const dday: number = calcDday(examDate);
+  useEffect(() => { save<Theme>("theme", theme); }, [theme]);
+  useEffect(() => { save<string>("examDate", examDate); }, [examDate]);
+
+  const saveProgress = (next: Progress): void => { setProgress(next); save<Progress>("progress", next); };
+  const toggleTheme = (): void => setTheme(t => t === "light" ? "dark" : "light");
+
+  const agree = (): void => { setAgreed(true); save<boolean>("agreed", true); };
+
+  const stats: Stats = useMemo(() => {
+    const vals = Object.values(progress.quiz || {});
+    const correct = vals.filter(v => v === "O").length;
+    const wrong = vals.filter(v => v === "X").length;
+    const solved = correct + wrong;
+    const rate = solved ? Math.round(correct / solved * 100) : 0;
+    return { correct, wrong, solved, rate, total: QUIZ.length };
+  }, [progress]);
+
+  const resetAll = (): void => {
+    if (window.confirm("이 학습자(" + USER + ")의 진도·오답·메모가 모두 초기화됩니다. 계속할까요?")) {
+      const keys: string[] = [];
+      for (let i = 0; i < window.localStorage.length; i++) {
+        const k = window.localStorage.key(i);
+        if (k && k.indexOf(NS) === 0) keys.push(k);
+      }
+      keys.forEach(k => window.localStorage.removeItem(k));
+      window.location.reload();
+    }
+  };
+
+  /* ① URL 인증 차단 — ?user= 파라미터가 없으면 진입 불가 */
+  if (!USER) {
+    return (
+      <div className={"app-root theme-" + theme}>
+        <div className="authblock">
+          <div className="ab-ico">🔒</div>
+          <h1>올바르지 않은 인증 링크입니다.</h1>
+          <p>본 학습 자료는 구매자 전용 인증 링크로만 이용할 수 있습니다.</p>
+          <div className="ab-hint">전달받은 링크의 주소 끝에 <code>?user=구매자이름</code> 형식이 포함되어야 합니다. 링크를 다시 확인해 주세요.</div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ② 라이선스 동의 — 최초 접속 시 1회, 동의하면 다시 뜨지 않음 */
+  if (!agreed) {
+    return (
+      <div className={"app-root theme-" + theme}>
+        <div className="lic-backdrop">
+          <div className="lic-card">
+            <div className="lic-ico">📕</div>
+            <div className="lic-sub">LICENSED COPY</div>
+            <div className="lic-title">합격노트 이용 안내</div>
+            <div className="lic-body">
+              본 프로그램은 <span className="lic-name">{USER}</span> 회원 전용 라이선스이며,
+              무단 유포 시 저작권법에 따라 처벌받을 수 있습니다.
+            </div>
+            <p className="lic-warn">동의하시면 이 기기(브라우저)에 인증 정보가 저장되어 다음 접속부터 이 안내가 표시되지 않습니다.</p>
+            <button className="lic-btn" onClick={agree}>동의하고 시작하기</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ③ 본 학습 화면 */
+  return (
+    <div className={"app-root theme-" + theme}>
+      <header className="topbar">
+        <div className="tb-left">
+          <span className="tb-logo">합격노트</span>
+          <span className="tb-dday">D-{dday}</span>
+        </div>
+        <div className="tb-right">
+          <button className="icon-btn" onClick={toggleTheme} aria-label="테마 전환">
+            <Icon name={theme === "light" ? "moon" : "sun"} size={19}/>
+          </button>
+          <button className="icon-btn" onClick={() => setShowSettings(true)} aria-label="설정">
+            <Icon name="gear" size={19}/>
+          </button>
+        </div>
+      </header>
+
+      <main className="screen">
+        {tab === "home"    && <HomeView name={USER} dday={dday} examDate={examDate} stats={stats} setTab={setTab}/>}
+        {tab === "summary" && <SummaryView/>}
+        {tab === "quiz"    && <QuizView progress={progress} saveProgress={saveProgress}/>}
+        {tab === "memo"    && <MemoView/>}
+        {tab === "wrong"   && <WrongView progress={progress} saveProgress={saveProgress}/>}
+        {tab === "note"    && <NoteView/>}
+        <DisclaimerFooter/>
+      </main>
+
+      <nav className="tabbar">
+        {([
+          ["home", "home", "홈"],
+          ["summary", "book", "요약"],
+          ["quiz", "quiz", "문제"],
+          ["memo", "memo", "암기"],
+          ["wrong", "wrong", "오답"],
+          ["note", "note", "노트"],
+        ] as [Tab, string, string][]).map(([key, ico, label]) => (
+          <button key={key} className={"tab " + (tab === key ? "on" : "")} onClick={() => setTab(key)}>
+            <Icon name={ico} size={21}/>
+            <span>{label}</span>
+            {key === "wrong" && stats.wrong > 0 && <i className="tab-badge">{stats.wrong}</i>}
+          </button>
+        ))}
+      </nav>
+
+      {showSettings && <SettingsSheet onClose={() => setShowSettings(false)} name={USER} dday={dday} examDate={examDate} setExamDate={setExamDate} onReset={resetAll}/>}
+    </div>
+  );
+}
+
+/* ───────── 홈 ───────── */
+function HomeView({ name, dday, examDate, stats, setTab }:
+  { name: string; dday: number; examDate: string; stats: Stats; setTab: (t: Tab) => void }): JSX.Element {
+  const ring = stats.total ? Math.round(stats.solved / stats.total * 100) : 0;
+  const fillPct = Math.max(4, Math.min(100, (1 - dday / 220) * 100));
+  return (
+    <div className="fade">
+      <div className="wm-line"><span className="wm-dot"/>인증 회원 · <b>{name}</b></div>
+
+      <div className="dday-card">
+        <div className="dday-top"><span>2026년 정기 실기시험</span><span className="dday-date">{fmtExamLong(examDate)}</span></div>
+        <div className="dday-big">D-{dday}<small>일 남음</small></div>
+        <div className="dday-bar"><div className="dday-fill" style={{ width: fillPct + "%" }}/></div>
+      </div>
+
+      <div className="stat-row">
+        <ProgressRing pct={ring}/>
+        <div className="stat-list">
+          <div className="stat"><b>{stats.solved}</b><span>푼 문제</span></div>
+          <div className="stat ok"><b>{stats.correct}</b><span>맞음</span></div>
+          <div className="stat no"><b>{stats.wrong}</b><span>틀림</span></div>
+          <div className="stat"><b>{stats.rate}%</b><span>정답률</span></div>
+        </div>
+      </div>
+
+      <div className="quick">
+        <button className="q-card a" style={{ animationDelay: "60ms" }} onClick={() => setTab("summary")}>
+          <div className="bar"/><span className="q-emoji">📖</span><b>요약 정리</b><span className="q-desc">출제기준 13단원</span>
+        </button>
+        <button className="q-card b" style={{ animationDelay: "100ms" }} onClick={() => setTab("quiz")}>
+          <div className="bar"/><span className="q-emoji">✏️</span><b>문제 풀이</b><span className="q-desc">{QUIZ.length}문항 · 기출+기본</span>
+        </button>
+        <button className="q-card c" style={{ animationDelay: "140ms" }} onClick={() => setTab("memo")}>
+          <div className="bar"/><span className="q-emoji">🗂️</span><b>암기 모드</b><span className="q-desc">순서 · 헷갈리는 개념 · 약자</span>
+        </button>
+        <button className="q-card d" style={{ animationDelay: "180ms" }} onClick={() => setTab("wrong")}>
+          <div className="bar"/><span className="q-emoji">🔖</span><b>오답 노트</b><span className="q-desc">{stats.wrong}개 복습 대기</span>
+        </button>
+        <button className="q-card note a" style={{ animationDelay: "220ms" }} onClick={() => setTab("note")}>
+          <span className="q-emoji">✒️</span><div><b>나만의 노트</b><div className="q-desc">자유롭게 메모하는 공간</div></div>
+        </button>
+      </div>
+    </div>
+  );
+}
+function ProgressRing({ pct }: { pct: number }): JSX.Element {
+  const r = 34, c = 2 * Math.PI * r, off = c - (pct / 100) * c;
+  return (
+    <div className="ring-wrap">
+      <svg width="86" height="86" viewBox="0 0 86 86">
+        <circle cx="43" cy="43" r={r} className="ring-bg"/>
+        <circle cx="43" cy="43" r={r} className="ring-fg" strokeDasharray={c} strokeDashoffset={off} transform="rotate(-90 43 43)"/>
+      </svg>
+      <div className="ring-label"><b>{pct}%</b><span>진도</span></div>
+    </div>
+  );
+}
+
+/* ───────── 요약 ───────── */
+function SummaryView(): JSX.Element {
+  const [open, setOpen] = useState<string | null>(null);
+  const [openTopic, setOpenTopic] = useState<Record<string, boolean>>({});
+  if (open) {
+    const sec = SUMMARY.find(s => s.id === open) as SummarySection;
+    return (
+      <div className="fade">
+        <button className="back" onClick={() => setOpen(null)}><Icon name="back" size={18}/> 단원 목록</button>
+        <div className="sec-head"><span className="sec-ico big">{sec.icon}</span><h2>{sec.title}</h2></div>
+        {sec.plc && <DataTable data={PLC_TABLE} title="제품수명주기 한눈에 ★"/>}
+        {sec.table === "survey" && <DataTable data={SURVEY_TABLE} title="조사방법 비교 (전화·면접·우편)"/>}
+        <div className="acc-list">
+          {sec.topics.map((tp, i) => {
+            const key = sec.id + i, isOpen = !!openTopic[key];
+            const star = tp.t.includes("★");
+            return (
+              <div key={key} className={"acc " + (isOpen ? "open" : "")}>
+                <button className="acc-head" onClick={() => setOpenTopic(o => ({ ...o, [key]: !o[key] }))}>
+                  <span>{tp.t.replace("★", " ").trim()}{star && <span className="star"> ★</span>}</span>
+                  <i className="chev">⌄</i>
+                </button>
+                {isOpen && <ul className="acc-body">{tp.b.map((line, j) => <li key={j}><RichText text={line}/></li>)}</ul>}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="fade">
+      <h2 className="view-title">요약 정리</h2>
+      <p className="view-sub">2026 출제기준 13단원(+부록) · 눌러서 펼쳐보세요</p>
+      <div className="sec-grid">
+        {SUMMARY.map((s, i) => (
+          <button key={s.id} className="sec-card" style={{ animationDelay: (i * 35) + "ms" }}
+            onClick={() => { setOpen(s.id); setOpenTopic({}); }}>
+            <span className="sec-ico">{s.icon}</span>
+            <b>{s.title}</b>
+            <span className="sec-count">{s.sub}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+function DataTable({ data, title }: { data: TableData; title: string }): JSX.Element {
+  return (
+    <div className="mini-table">
+      <div className="mt-title">{title}</div>
+      <div className="mt-scroll">
+        <table>
+          <thead><tr>{data.cols.map((c, i) => <th key={i} className={i === 0 ? "th-first" : ""}>{c}</th>)}</tr></thead>
+          <tbody>{data.rows.map((row, ri) => (
+            <tr key={ri}>{row.map((cell, ci) => ci === 0 ? <th key={ci} className="row-h">{cell}</th> : <td key={ci}>{cell}</td>)}</tr>
+          ))}</tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+/* ───────── 문제 ───────── */
+function setLabel(s: string): string {
+  if (s === "basic") return "기본개념";
+  const m = s.split("-");
+  return m.length === 2 ? (m[0] + "년 " + m[1] + "회") : s;
+}
+function QuizView({ progress, saveProgress }:
+  { progress: Progress; saveProgress: (p: Progress) => void }): JSX.Element {
+  const [setKey, setSetKey] = useState<string | null>(null);
+  const [list, setList] = useState<QuizItem[]>([]);
+  const [idx, setIdx] = useState<number>(0);
+  const [revealed, setRevealed] = useState<boolean>(false);
+  const [done, setDone] = useState<boolean>(false);
+  const [score, setScore] = useState<{ o: number; x: number }>({ o: 0, x: 0 });
+
+  const countSet = (key: string): number => QUIZ.filter(q => q.set === key).length;
+  const doneSet = (key: string): number => QUIZ.filter(q => q.set === key && progress.quiz[q.id]).length;
+
+  const start = (key: string): void => {
+    let qs = key === "ALL" ? [...QUIZ] : QUIZ.filter(q => q.set === key);
+    qs = shuffle(qs);
+    setList(qs); setSetKey(key); setIdx(0); setRevealed(false); setDone(false); setScore({ o: 0, x: 0 });
+  };
+  const grade = (res: Grade): void => {
+    const q = list[idx];
+    saveProgress({ ...progress, quiz: { ...progress.quiz, [q.id]: res }, lastVisit: Date.now() });
+    setScore(s => ({ o: s.o + (res === "O" ? 1 : 0), x: s.x + (res === "X" ? 1 : 0) }));
+    if (idx + 1 >= list.length) setDone(true); else { setIdx(idx + 1); setRevealed(false); }
+  };
+  const skip = (): void => { if (idx + 1 >= list.length) setDone(true); else { setIdx(idx + 1); setRevealed(false); } };
+
+  if (!setKey) {
+    return (
+      <div className="fade">
+        <h2 className="view-title">문제 풀이</h2>
+        <p className="view-sub">전부 주관식이에요. 답을 떠올린 뒤 채점하세요 (정답만 표시)</p>
+
+        <div className="qset-group">
+          <div className="qset-glabel">기본기 다지기</div>
+          <button className="catbtn feat" onClick={() => start("basic")}>
+            <span className="tagnew">기본개념</span>
+            <b>핵심 개념 문제</b><span>{countSet("basic")}문항 · {doneSet("basic")} 완료</span>
+          </button>
+        </div>
+
+        {QUIZ_YEARS.map(y => (
+          <div className="qset-group" key={y.year}>
+            <div className="qset-glabel">{y.year}년 기출 복원</div>
+            <div className={"qset-row" + (y.rounds.length === 3 ? " r3" : "")}>
+              {y.rounds.map(r => {
+                const t = countSet(r.key), d = doneSet(r.key);
+                return (
+                  <button key={r.key} className="catbtn" onClick={() => start(r.key)}>
+                    <b>{r.label}</b>
+                    <span>{t}문항{d > 0 && <span className="done-mini"> · {d}✓</span>}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+
+        <button className="catbtn wide" onClick={() => start("ALL")}>
+          <b>전체 랜덤 문제풀기</b><span>{QUIZ.length}문항 전체 섞기</span>
+        </button>
+      </div>
+    );
+  }
+
+  if (done) {
+    const total = score.o + score.x;
+    const rate = total ? Math.round(score.o / total * 100) : 0;
+    return (
+      <div className="fade center-col">
+        <div className="done-card">
+          <div className="done-emoji">{rate >= 60 ? "🎉" : "📘"}</div>
+          <h2>세션 완료</h2>
+          <div className="done-rate">{rate}%</div>
+          <p className="done-line">맞음 {score.o} · 틀림 {score.x}</p>
+          <p className="done-msg">{rate >= 60 ? "합격 기준(60점)을 넘었습니다." : "틀린 문제는 오답 노트에서 다시 풀 수 있어요."}</p>
+          <button className="ob-btn" onClick={() => start(setKey)}>다시 풀기</button>
+          <button className="ghost-btn" onClick={() => setSetKey(null)}>다른 세트 선택</button>
+        </div>
+      </div>
+    );
+  }
+
+  const q = list[idx];
+  const prev = progress.quiz[q.id];
+  return (
+    <div className="fade">
+      <button className="back" onClick={() => setSetKey(null)}><Icon name="back" size={18}/> 세트 선택</button>
+      <div className="quiz-meta">
+        <span className="quiz-cat">{q.cat}</span>
+        <span className="quiz-prog">{idx + 1} / {list.length}</span>
+      </div>
+      <div className="quiz-progbar"><div style={{ width: (idx / list.length * 100) + "%" }}/></div>
+      <div className="qcard">
+        <div className={"q-yr " + (q.set.indexOf("2026") === 0 ? "y26" : "")}>{setLabel(q.set)}</div>
+        <p className="q-text">{q.q}</p>
+        {prev && <span className={"q-prev " + (prev === "O" ? "ok" : "no")}>지난 기록 · {prev === "O" ? "맞음" : "틀림"}</span>}
+        {!revealed
+          ? <button className="reveal-btn" onClick={() => setRevealed(true)}>정답 보기</button>
+          : (
+            <div className="answer">
+              <div className="ans-label">정답</div>
+              <p className="ans-text">{q.a}</p>
+              <div className="grade-row">
+                <button className="grade x" onClick={() => grade("X")}>✕ 틀렸어요</button>
+                <button className="grade o" onClick={() => grade("O")}>✓ 맞았어요</button>
+              </div>
+            </div>
+          )}
+      </div>
+      {!revealed && <button className="skip-btn" onClick={skip}>건너뛰기 →</button>}
+    </div>
+  );
+}
+
+/* ───────── 오답 ───────── */
+function WrongView({ progress, saveProgress }:
+  { progress: Progress; saveProgress: (p: Progress) => void }): JSX.Element {
+  const wrongs = QUIZ.filter(q => progress.quiz[q.id] === "X");
+  const [openId, setOpenId] = useState<string | null>(null);
+  const resolve = (id: string): void => saveProgress({ ...progress, quiz: { ...progress.quiz, [id]: "O" } });
+  if (wrongs.length === 0) {
+    return (
+      <div className="fade center-col">
+        <div className="empty">
+          <div className="empty-emoji">🗒️</div>
+          <h2>오답이 없어요</h2>
+          <p>문제를 풀다가 틀린 문항이 자동으로 여기에 모여요.</p>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="fade">
+      <h2 className="view-title">오답 노트</h2>
+      <p className="view-sub">{wrongs.length}개 · 다시 보고 ‘해결’로 정리하세요</p>
+      <div className="wrong-list">
+        {wrongs.map(q => (
+          <div key={q.id} className="wrong-item">
+            <button className="wrong-q" onClick={() => setOpenId(openId === q.id ? null : q.id)}>
+              <span className="wrong-cat">{setLabel(q.set)} · {q.cat}</span>
+              <span className="wrong-text">{q.q}</span>
+            </button>
+            {openId === q.id && (
+              <div className="wrong-a">
+                <p>{q.a}</p>
+                <button className="resolve" onClick={() => resolve(q.id)}>✓ 이해했어요 (해결)</button>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ───────── 암기 (두문자 제외) ───────── */
+function MemoView(): JSX.Element {
+  const [mode, setMode] = useState<"seq" | "compare" | "abbr">("seq");
+  return (
+    <div className="fade">
+      <h2 className="view-title">암기 모드</h2>
+      <div className="memo-tabs">
+        {([["seq", "순서"], ["compare", "헷갈리는 개념"], ["abbr", "약자"]] as ["seq" | "compare" | "abbr", string][]).map(([k, l]) => (
+          <button key={k} className={"memo-tab " + (mode === k ? "on" : "")} onClick={() => setMode(k)}>{l}</button>
+        ))}
+      </div>
+      {mode === "seq" && <SeqList/>}
+      {mode === "compare" && <CompareList/>}
+      {mode === "abbr" && <FlashDeck cards={ABBREV} hint="약자의 뜻을 떠올리세요"/>}
+    </div>
+  );
+}
+function FlashDeck({ cards, hint }: { cards: AbbrCard[]; hint: string }): JSX.Element {
+  const [i, setI] = useState<number>(0);
+  const [flip, setFlip] = useState<boolean>(false);
+  const card = cards[i];
+  const go = (d: number): void => { setFlip(false); setTimeout(() => setI(p => (p + d + cards.length) % cards.length), 90); };
+  return (
+    <div className="deck">
+      <p className="deck-hint">{hint} · {i + 1}/{cards.length}</p>
+      <div className={"flash " + (flip ? "flip" : "")} onClick={() => setFlip(!flip)}>
+        <div className="flash-inner">
+          <div className="flash-face front"><span className="flash-front-text">{card.f}</span><span className="flash-tap">탭하여 뒤집기</span></div>
+          <div className="flash-face back"><span className="flash-back-text">{card.b}</span></div>
+        </div>
+      </div>
+      <div className="deck-nav">
+        <button className="deck-btn" onClick={() => go(-1)}>← 이전</button>
+        <button className="deck-btn" onClick={() => go(1)}>다음 →</button>
+      </div>
+    </div>
+  );
+}
+function CompareList(): JSX.Element {
+  return (
+    <div className="cmp-list">
+      {COMPARES.map((c, i) => (
+        <div key={i} className="cmp" style={{ animationDelay: (i * 25) + "ms" }}>
+          <div className="cmp-title">{c.title}</div>
+          <div className="cmp-row">
+            <div className="cmp-side l"><b>{c.l[0]}</b><span>{c.l[1]}</span></div>
+            <div className="cmp-vs">VS</div>
+            <div className="cmp-side r"><b>{c.r[0]}</b><span>{c.r[1]}</span></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+function SeqList(): JSX.Element {
+  return (
+    <div className="seq-list">
+      {SEQUENCES.map((s, i) => (
+        <div key={i} className="seq" style={{ animationDelay: (i * 25) + "ms" }}>
+          <div className="seq-title">{s.title}</div>
+          <div className="seq-chips">
+            {s.steps.map((st, j) => (
+              <span key={j} className="seq-chip-wrap">
+                <span className="seq-chip">{st}</span>
+                {j < s.steps.length - 1 && <span className="seq-arrow">→</span>}
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ───────── 나만의 노트 ───────── */
+function NoteView(): JSX.Element {
+  const [note, setNote] = useState<string>(() => load<string>("note", ""));
+  const [saved, setSaved] = useState<boolean>(true);
+  useEffect(() => {
+    setSaved(false);
+    const t = setTimeout(() => { save<string>("note", note); setSaved(true); }, 400);
+    return () => clearTimeout(t);
+  }, [note]);
+  return (
+    <div className="fade">
+      <div className="note-head">
+        <h2 className="view-title" style={{ margin: 0 }}>나만의 노트</h2>
+        <span className="note-saved">{saved ? "자동 저장됨 ✓" : "저장 중…"}</span>
+      </div>
+      <textarea className="note-area" value={note} onChange={e => setNote(e.target.value)}
+        placeholder="자주 틀리는 개념, 외울 순서, 시험장에서 마지막으로 볼 내용을 자유롭게 적어두세요. (자동 저장)"/>
+    </div>
+  );
+}
+
+/* ───────── 설정 ───────── */
+function SettingsSheet({ onClose, name, dday, examDate, setExamDate, onReset }:
+  { onClose: () => void; name: string; dday: number; examDate: string; setExamDate: (v: string) => void; onReset: () => void }): JSX.Element {
+  const [info, setInfo] = useState<boolean>(false);
+  return (
+    <div className="sheet-backdrop" onClick={onClose}>
+      <div className="sheet" onClick={e => e.stopPropagation()}>
+        <div className="sheet-handle"/>
+        <h3 className="sheet-title">설정</h3>
+        <div className="sheet-row"><span>인증 회원</span><b>{name}</b></div>
+        <div className="sheet-row" style={{ borderBottom: "none", paddingBottom: "4px" }}>
+          <span>시험일</span><b>{fmtExamDot(examDate)} · D-{dday}</b>
+        </div>
+        <div className="exam-picker">
+          {EXAM_OPTIONS.map(o => (
+            <button key={o.v} className={"exam-chip " + (o.v === examDate ? "on" : "")} onClick={() => setExamDate(o.v)}>
+              <span className="ec-wd">{o.wd}</span><span className="ec-md">{o.md}</span>
+            </button>
+          ))}
+        </div>
+        <p className="exam-note">7월 18일 ~ 8월 5일 사이에서 시험일을 고르면 D-day가 함께 바뀌어요.</p>
+        <div className="sheet-row"><span>문항 수</span><b>{QUIZ.length}문항</b></div>
+        <button className="sheet-link" onClick={() => setInfo(!info)}>이용 안내 {info ? "▴" : "▾"}</button>
+        {info && <p className="sheet-info">본 자료는 기출문제를 토대로 재구성한 학습 보조 자료로, 실제 출제·정답·합격을 보장하지 않습니다. 진도·메모는 이용자 기기(브라우저)에만 저장되며 별도 개인정보를 수집하지 않습니다. 정확한 시험 정보는 한국산업인력공단 큐넷(Q-net) 공고를 확인하세요.</p>}
+        <button className="sheet-reset" onClick={onReset}>학습 기록 초기화</button>
+        <button className="sheet-close" onClick={onClose}>닫기</button>
+      </div>
+    </div>
+  );
+}
+
+/* ───────── 하단 고지 ───────── */
+function DisclaimerFooter(): JSX.Element {
+  return (
+    <p className="disclaimer">본 앱은 회원가입 없이 브라우저 캐시(LocalStorage)에 학습 데이터를 저장합니다. 브라우저 캐시 삭제 또는 시크릿 모드 접속 시 기록이 초기화될 수 있습니다.</p>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+
+<!-- TypeScript(TSX) → JS 변환 로더 (타입 제거 후 React 변환) -->
+<script>
+(function () {
+  var el = document.getElementById("app-source");
+  if (!el || typeof Babel === "undefined") return;
+  try {
+    var out = Babel.transform(el.textContent, {
+      filename: "app.tsx",
+      presets: [
+        ["react", { runtime: "classic" }],
+        ["typescript", { isTSX: true, allExtensions: true, allowNamespaces: true }]
+      ]
+    }).code;
+    (0, eval)(out);
+  } catch (err) {
+    console.error("앱 로딩 오류:", err);
+    var root = document.getElementById("root");
+    if (root) root.textContent = "앱을 불러오는 중 오류가 발생했습니다. 새로고침 해주세요.";
+  }
+})();
+</script>
+</body>
+</html>
