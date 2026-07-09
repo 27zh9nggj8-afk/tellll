@@ -437,7 +437,7 @@ input,textarea{font-family:inherit;outline:none;}
 </style>
 <script>
 (function(){
-  var SEEN_KEY = 'tm_update_notice_2026_07_seen';
+  var SEEN_KEY = 'tm_update_notice_2026_07_09_seen';
   var AGREED_KEY = 'hapkyeok_v2_' + encodeURIComponent(
     (function(){ try { return new URLSearchParams(location.search).get('user') || ''; } catch (e) { return ''; } })()
   ) + '_agreed';
@@ -452,7 +452,7 @@ input,textarea{font-family:inherit;outline:none;}
       '<div id="tm-update-card">' +
         '<div class="tm-ico">✨</div>' +
         '<div class="tm-title">텔레마케팅 실기 합격노트가 바뀌었어요!</div>' +
-        '<div class="tm-body">더 깔끔해진 색 + 추가, 수정된 기출문제들!</div>' +
+        '<div class="tm-body">시험일 7월 19일 반영 · 새 로고 · 설정에서 "홈 화면에 앱 설치"도 눌러보세요!</div>' +
         '<button class="tm-btn" id="tm-update-ok" type="button">확인했어요</button>' +
       '</div>';
     document.body.appendChild(overlay);
@@ -583,6 +583,7 @@ react/cjs/react-jsx-runtime.production.js:
   var stepChrome = '<div style="margin-top:14px;padding:14px;background:#F4F6FB;border-radius:12px;"><b>크롬(Chrome)</b><br>1. 우측 상단 <b>점 3개(⋮)</b> 클릭<br>2. <b>"저장 및 공유"</b> (또는 "전송, 저장 및 공유") 클릭<br>3. <b>"페이지를 앱으로 설치"</b> 클릭 → <b>설치</b></div>';
   var stepEdge = '<div style="margin-top:14px;padding:14px;background:#F4F6FB;border-radius:12px;"><b>엣지(Edge)</b><br>1. 우측 상단 <b>점 3개(⋯)</b> 클릭<br>2. <b>"앱"</b> → <b>"이 사이트를 앱으로 설치"</b> 클릭<br>&nbsp;&nbsp;· "앱"이 안 보이면 <b>"기타 도구"</b> 안을 확인하세요<br>3. <b>설치</b> → "바탕 화면에 바로 가기" 체크</div>';
   var stepSafari = '<div style="margin-top:14px;padding:14px;background:#F4F6FB;border-radius:12px;"><b>사파리(Safari)</b><br>1. 주소창 옆 <b>공유 버튼(⬆️)</b> 클릭<br>2. <b>"Dock에 추가"</b> 클릭 → <b>추가</b></div>';
+  var warnOther = '<div style="margin-top:12px;font-size:13.5px;color:#5b6472;">지금 쓰시는 브라우저가 크롬·엣지가 아니라면(파이어폭스 등) 설치 기능이 없을 수 있어요 — <b>크롬</b>이나 <b>엣지</b>로 열면 버튼 한 번으로 설치돼요.</div>';
   var tipIcon = '<div style="margin-top:14px;font-size:13.5px;color:#5b6472;">💡 주소창 <b>오른쪽 끝</b>에 설치 아이콘(화면 모양에 ↓)이 보이면, 그걸 누르는 게 가장 빨라요.</div>';
 
   function guide() {
@@ -590,15 +591,15 @@ react/cjs/react-jsx-runtime.production.js:
     if (isInApp) {
       msg = '<b>' + (isKakao ? '카카오톡' : '앱 내부') + ' 브라우저에서는 설치할 수 없어요.</b><br><br>화면의 <b>메뉴(⋮ 또는 공유)</b>를 눌러 <b>"다른 브라우저로 열기"</b>(크롬/사파리)를 선택한 뒤, 다시 시도해주세요.';
     } else if (isIOS) {
-      msg = '<b>아이폰·아이패드 설치 방법</b><br><br>1. 사파리 하단의 <b>공유 버튼</b>(⬆️ 네모에 화살표)을 누르세요<br>&nbsp;&nbsp;· 공유 버튼이 안 보이면 하단 <b>점 세 개(⋯)</b>를 먼저 누르면 나와요<br>2. 아래로 내려 <b>"홈 화면에 추가"</b>를 누르세요<br>3. 우측 상단 <b>추가</b>를 누르면 완료!';
+      msg = '<b>아이폰·아이패드 설치 방법</b><br><br>1. 사파리 하단의 <b>공유 버튼</b>(⬆️ 네모에 화살표)을 누르세요<br>&nbsp;&nbsp;· 공유 버튼이 안 보이면 하단 <b>점 세 개(⋯)</b>를 먼저 누르면 나와요<br>2. 아래로 내려 <b>"홈 화면에 추가"</b>를 누르세요<br>3. 우측 상단 <b>추가</b>를 누르면 완료!' + (/CriOS|EdgiOS|FxiOS/.test(ua) ? '<br><br>💡 지금 크롬 등 다른 브라우저로 보고 계시다면, 같은 주소를 <b>사파리</b>로 열어서 하시는 게 가장 확실해요.' : '');
     } else if (isAndroid) {
-      msg = '<b>휴대폰 설치 방법</b><br><br>1. 브라우저 <b>메뉴(⋮ 또는 ☰)</b>를 누르세요<br>2. <b>"홈 화면에 추가"</b>' + (isSamsungNet ? ' (삼성인터넷은 "현재 페이지 추가" → "홈 화면")' : '') + '를 누르세요<br>3. <b>추가</b>를 누르면 완료!';
+      msg = '<b>휴대폰 설치 방법</b><br><br>1. 브라우저 <b>메뉴(⋮ 또는 ☰)</b>를 누르세요<br>2. <b>"앱 설치"</b> 또는 <b>"홈 화면에 추가"</b>' + (isSamsungNet ? ' (삼성인터넷은 "현재 페이지 추가" → "홈 화면")' : '') + '를 누르세요<br>3. <b>추가</b>를 누르면 완료!';
     } else if (isMacSafari) {
-      msg = '<b>맥(Mac) 사파리에서 설치하기</b>' + stepSafari + '<div style="margin-top:12px;font-size:13.5px;color:#5b6472;">크롬을 쓰신다면 설치 버튼 한 번으로 바로 설치돼요.</div>';
+      msg = '<b>맥(Mac) 사파리에서 설치하기</b>' + stepSafari + '<div style="margin-top:12px;font-size:13.5px;color:#5b6472;">메뉴에 &quot;Dock에 추가&quot;가 없으면(구형 macOS) <b>크롬</b>으로 열어주세요 — 크롬에서는 설치 버튼 한 번으로 바로 설치돼요.</div>';
     } else if (isMac) {
-      msg = '<b>맥(Mac)에서 설치하기</b>' + (isEdge ? stepEdge : isChrome ? stepChrome : stepChrome + stepEdge + stepSafari) + tipIcon;
+      msg = '<b>맥(Mac)에서 설치하기</b>' + (isEdge ? stepEdge : isChrome ? stepChrome : warnOther + stepChrome + stepEdge + stepSafari) + tipIcon;
     } else if (isWin) {
-      msg = '<b>윈도우 컴퓨터에서 설치하기</b>' + (isEdge ? stepEdge : isChrome ? stepChrome : stepEdge + stepChrome) + tipIcon;
+      msg = '<b>윈도우 컴퓨터에서 설치하기</b>' + (isEdge ? stepEdge : isChrome ? stepChrome : warnOther + stepEdge + stepChrome) + tipIcon;
     } else {
       msg = '<b>설치 방법</b><br><br><b>맥북</b>과 <b>윈도우 컴퓨터</b> 각각 아래를 따라해주세요.' + stepEdge + stepChrome + stepSafari + tipIcon;
     }
@@ -618,7 +619,7 @@ react/cjs/react-jsx-runtime.production.js:
   }
   window.tmInstallApp = function () {
     if (deferred) { fire(); return; }
-    if (isChrome || isEdge) {
+    if (isChrome || isEdge || isSamsungNet) {
       var waited = 0;
       var iv = setInterval(function () {
         if (deferred) { clearInterval(iv); fire(); }
