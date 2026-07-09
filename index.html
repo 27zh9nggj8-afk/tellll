@@ -586,13 +586,21 @@ react/cjs/react-jsx-runtime.production.js:
     document.body.appendChild(ov);
   }
 
+  function fire() {
+    deferred.prompt();
+    deferred.userChoice.then(function () { deferred = null; });
+  }
   window.tmInstallApp = function () {
-    if (deferred) {
-      deferred.prompt();
-      deferred.userChoice.then(function () { deferred = null; });
-    } else {
-      guide();
+    if (deferred) { fire(); return; }
+    if (!isIOS && !isMacSafari && !isInApp) {
+      var waited = 0;
+      var iv = setInterval(function () {
+        if (deferred) { clearInterval(iv); fire(); }
+        else if ((waited += 200) >= 2000) { clearInterval(iv); guide(); }
+      }, 200);
+      return;
     }
+    guide();
   };
 })();
 </script>
