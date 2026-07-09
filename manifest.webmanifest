@@ -1,6 +1,9 @@
 {
   "name": "합격노트 · 텔레마케팅관리사 실기",
   "short_name": "합격노트",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#F4F6FB",
   "theme_color": "#F4F6FB",
